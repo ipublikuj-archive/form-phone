@@ -45,7 +45,7 @@ class PhoneInputTest extends Tester\TestCase
 		$dic = $this->createContainer();
 
 		// Get phone helper from container
-		$this->phone = $dic->getService($dic->getByType(Phone\Phone::CLASS_NAME));
+		$this->phone = $dic->getByType(Phone\Phone::CLASS_NAME);
 	}
 
 	public function testHtmlPartNumber()
