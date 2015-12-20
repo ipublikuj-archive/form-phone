@@ -395,7 +395,7 @@ class Phone extends Forms\Controls\TextInput
 		// Country code have to be upper-cased
 		$country = strtoupper($country);
 
-		if ((strlen($country) === 2 && ctype_alpha($country) && ctype_upper($country)) || $country === 'AUTO') {
+		if ((strlen($country) === 2 && ctype_alpha($country) && ctype_upper($country) && in_array($country, $this->phoneUtils->getSupportedCountries())) || $country === 'AUTO') {
 			return $country;
 
 		} else {
