@@ -58,8 +58,8 @@ class PhoneInputTest extends Tester\TestCase
 		$form->addComponent($control, 'phone');
 
 		// Set some value
-		$control->setValue('+420234567890');
 		$control->setCountries(['AUTO']);
+		$control->setValue('+420234567890');
 
 		$dq = Tester\DomQuery::fromHtml((string) $control->getControlPart(FormPhone\Controls\Phone::FIELD_NUMBER));
 
@@ -76,8 +76,8 @@ class PhoneInputTest extends Tester\TestCase
 		$form->addComponent($control, 'phone');
 
 		// Set some value
-		$control->setValue('+420234567890');
 		$control->setCountries(['AUTO']);
+		$control->setValue('+420234567890');
 
 		$dq = Tester\DomQuery::fromHtml((string) $control->getControlPart(FormPhone\Controls\Phone::FIELD_COUNTRY));
 
