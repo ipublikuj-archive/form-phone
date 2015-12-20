@@ -270,7 +270,7 @@ class Phone extends Forms\Controls\TextInput
 	 */
 	public function getValue()
 	{
-		if (empty($this->country) || empty($this->country)) {
+		if ($this->country !== '' || $this->country !== '') {
 			return NULL;
 		}
 
