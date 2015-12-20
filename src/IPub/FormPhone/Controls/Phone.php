@@ -336,7 +336,7 @@ class Phone extends Forms\Controls\TextInput
 
 			$control
 				->name($name . '[' . static::FIELD_COUNTRY . ']')
-				->id($this->getHtmlId() . static::FIELD_COUNTRY)
+				->id($this->getHtmlId() . '-' . static::FIELD_COUNTRY)
 				->{'data-ipub-forms-phone'}('')
 				->{'data-settings'}(json_encode([
 					'field' => $name . '[' . static::FIELD_NUMBER . ']'
@@ -355,7 +355,7 @@ class Phone extends Forms\Controls\TextInput
 
 			$control
 				->name($name . '[' . static::FIELD_NUMBER . ']')
-				->id($this->getHtmlId() . static::FIELD_COUNTRY)
+				->id($this->getHtmlId() . '-' . static::FIELD_NUMBER)
 				->value($this->number)
 				->type('text')
 				->{'data-nette-rules'}($input->attrs['data-nette-rules']);
