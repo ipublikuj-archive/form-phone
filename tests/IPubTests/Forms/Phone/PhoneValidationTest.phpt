@@ -26,7 +26,7 @@ use IPub\FormPhone;
 
 use IPub\Phone;
 
-require __DIR__ . '/../bootstrap.php';
+require __DIR__ . '/../../bootstrap.php';
 
 /**
  * Phone number form validation tests
