@@ -73,12 +73,10 @@ class PhoneValidationTest extends Tester\TestCase
 		$field = $this->createControl();
 		// Set allowed country
 		$field->addCountry('NL');
-		$field
-			->addRule(FormPhone\Forms\PhoneValidator::PHONE, 'Invalid phone')
-			->setValue('016123456')
-			->validate();
 
-		Assert::true($field->hasErrors());
+		Assert::exception(function() use ($field) {
+			$field->setValue('016123456');
+		}, 'IPub\FormPhone\Exceptions\InvalidArgumentException');
 
 		// Validator with multiple country values, one correct
 		$field = $this->createControl();
@@ -241,7 +239,7 @@ class PhoneValidationTest extends Tester\TestCase
 			->setValue('003216123456')
 			->validate();
 
-		Assert::true($field->hasErrors());
+		Assert::false($field->hasErrors());
 
 		// Validator with wrong international input
 		$field = $this->createControl();
@@ -298,7 +296,7 @@ class PhoneValidationTest extends Tester\TestCase
 	}
 
 	/**
-	 * @throws \IPub\Phone\Exceptions\InvalidArgumentException
+	 * @throws \IPub\FormPhone\Exceptions\InvalidArgumentException
 	 */
 	public function testValidatorOnWrongControl()
 	{
