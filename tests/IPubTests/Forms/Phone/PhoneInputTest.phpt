@@ -24,13 +24,64 @@ use Tester\Assert;
 use IPub;
 use IPub\FormPhone;
 
+use IPub\Phone;
+
 require __DIR__ . '/../../bootstrap.php';
 
 class PhoneInputTest extends Tester\TestCase
 {
-	public function testHtml()
-	{
+	/**
+	 * @var Phone\Phone
+	 */
+	private $phone;
 
+	/**
+	 * Set up
+	 */
+	public function setUp()
+	{
+		parent::setUp();
+
+		$dic = $this->createContainer();
+
+		// Get phone helper from container
+		$this->phone = $dic->getService($dic->getByType(Phone\Phone::CLASS_NAME));
+	}
+
+	public function testHtmlPartNumber()
+	{
+		// Create form
+		$form = new Forms\Form;
+		// Create form control
+		$control = new FormPhone\Controls\Phone($this->phone);
+		// Add form control to form
+		$form->addComponent($control, 'phone');
+
+		// Set some value
+		$control->setValue('+420234567890');
+		$control->setCountries(['AUTO']);
+
+		$dq = Tester\DomQuery::fromHtml((string) $control->getControlPart(FormPhone\Controls\Phone::FIELD_NUMBER));
+
+		Assert::true($dq->has('input[value=234567890]'));
+	}
+
+	public function testHtmlPartCountry()
+	{
+		// Create form
+		$form = new Forms\Form;
+		// Create form control
+		$control = new FormPhone\Controls\Phone($this->phone);
+		// Add form control to form
+		$form->addComponent($control, 'phone');
+
+		// Set some value
+		$control->setValue('+420234567890');
+		$control->setCountries(['AUTO']);
+
+		$dq = Tester\DomQuery::fromHtml((string) $control->getControlPart(FormPhone\Controls\Phone::FIELD_COUNTRY));
+
+		Assert::true($dq->has('select option[value=CZ][selected]'));
 	}
 
 	/**
@@ -38,13 +89,13 @@ class PhoneInputTest extends Tester\TestCase
 	 */
 	public function testRegistrationMultiple()
 	{
-		FormPhone\Controls\Phone::register();
-		FormPhone\Controls\Phone::register();
+		FormPhone\Controls\Phone::register($this->phone);
+		FormPhone\Controls\Phone::register($this->phone);
 	}
 
 	public function testRegistration()
 	{
-		FormPhone\Controls\Phone::register();
+		FormPhone\Controls\Phone::register($this->phone);
 
 		// Create form
 		$form = new Forms\Form;
@@ -71,11 +122,26 @@ class PhoneInputTest extends Tester\TestCase
 		// Create form
 		$form = new Forms\Form;
 		// Create form control
-		$control = new FormPhone\Controls\Phone;
+		$control = new FormPhone\Controls\Phone($this->phone);
 		// Add form control to form
 		$form->addComponent($control, 'phone');
 
 		return $control;
+	}
+
+	/**
+	 * @return Nette\DI\Container
+	 */
+	protected function createContainer()
+	{
+		$config = new Nette\Configurator();
+		$config->setTempDirectory(TEMP_DIR);
+
+		Phone\DI\PhoneExtension::register($config);
+
+		$config->addConfig(__DIR__ . '/files/config.neon', $config::NONE);
+
+		return $config->createContainer();
 	}
 }
 
