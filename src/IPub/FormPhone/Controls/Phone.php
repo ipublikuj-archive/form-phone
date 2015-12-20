@@ -166,17 +166,22 @@ class Phone extends Forms\Controls\TextInput
 	}
 
 	/**
-	 * @param string $country
+	 * @param string|NULL $country
 	 *
 	 * @return $this
 	 *
 	 * @throws Exceptions\NoValidCountryException
 	 */
-	public function setDefaultCountry($country)
+	public function setDefaultCountry($country = NULL)
 	{
-		$country = $this->validateCountry($country);
+		if ($country === NULL) {
+			$this->defaultCountry = NULL;
 
-		$this->defaultCountry = strtoupper($country);
+		} else {
+			$country = $this->validateCountry($country);
+
+			$this->defaultCountry = strtoupper($country);
+		}
 
 		return $this;
 	}

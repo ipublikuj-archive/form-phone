@@ -221,7 +221,7 @@ class PhoneInputTest extends Tester\TestCase
 		$control = $this->createControl();
 
 		Assert::exception(function() use ($control) {
-			$control->setDefaultCountry('XX');
+			$control->setDefaultCountry('xy');
 		}, 'IPub\FormPhone\Exceptions\NoValidCountryException');
 
 		Assert::exception(function() use ($control) {
