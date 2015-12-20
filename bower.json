@@ -1,0 +1,15 @@
+{
+	"name": "ipub/form-phone",
+	"main": [
+		"client-side/js/ipub.formPhone.js"
+	],
+	"ignore": [
+		"src",
+		"tests",
+		".gitignore",
+		".scrutinizer.yml",
+		".travis.composer.php",
+		".travis.yml",
+		"composer.json"
+	]
+}
