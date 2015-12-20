@@ -59,54 +59,61 @@ class PhoneValidationTest extends Tester\TestCase
 	public function testValidatePhoneWithDefaultCountryWithoutType()
 	{
 		// Validator with correct country value
-		$field = $this->createControl();
+		$field = $this->createControl([
+			'phone' => [FormPhone\Controls\Phone::FIELD_COUNTRY => 'BE', FormPhone\Controls\Phone::FIELD_NUMBER => '016123456'],
+		]);
 		// Set allowed country
 		$field->addCountry('BE');
 		$field
 			->addRule(FormPhone\Forms\PhoneValidator::PHONE, 'Invalid phone')
-			->setValue('016123456')
 			->validate();
 
 		Assert::false($field->hasErrors());
 
 		// Validator with wrong country value
-		$field = $this->createControl();
+		$field = $this->createControl([
+			'phone' => [FormPhone\Controls\Phone::FIELD_COUNTRY => 'NL', FormPhone\Controls\Phone::FIELD_NUMBER => '016123456'],
+		]);
 		// Set allowed country
 		$field->addCountry('NL');
+		$field
+			->addRule(FormPhone\Forms\PhoneValidator::PHONE, 'Invalid phone')
+			->validate();
 
-		Assert::exception(function() use ($field) {
-			$field->setValue('016123456');
-		}, 'IPub\FormPhone\Exceptions\InvalidArgumentException');
+		Assert::true($field->hasErrors());
 
 		// Validator with multiple country values, one correct
-		$field = $this->createControl();
+		$field = $this->createControl([
+			'phone' => [FormPhone\Controls\Phone::FIELD_COUNTRY => 'BE', FormPhone\Controls\Phone::FIELD_NUMBER => '016123456'],
+		]);
 		// Set allowed country
 		$field->setCountries(['BE', 'NL']);
 		$field
 			->addRule(FormPhone\Forms\PhoneValidator::PHONE, 'Invalid phone')
-			->setValue('016123456')
 			->validate();
 
 		Assert::false($field->hasErrors());
 
 		// Validator with multiple country values, value correct for second country in list
-		$field = $this->createControl();
+		$field = $this->createControl([
+			'phone' => [FormPhone\Controls\Phone::FIELD_COUNTRY => 'BE', FormPhone\Controls\Phone::FIELD_NUMBER => '016123456'],
+		]);
 		// Set allowed country
 		$field->setCountries(['BE', 'NL']);
 		$field
 			->addRule(FormPhone\Forms\PhoneValidator::PHONE, 'Invalid phone')
-			->setValue('016123456')
 			->validate();
 
 		Assert::false($field->hasErrors());
 
 		// Validator with multiple wrong country values
-		$field = $this->createControl();
+		$field = $this->createControl([
+			'phone' => [FormPhone\Controls\Phone::FIELD_COUNTRY => 'DE', FormPhone\Controls\Phone::FIELD_NUMBER => '016123456'],
+		]);
 		// Set allowed country
 		$field->setCountries(['DE', 'NL']);
 		$field
 			->addRule(FormPhone\Forms\PhoneValidator::PHONE, 'Invalid phone')
-			->setValue('016123456')
 			->validate();
 
 		Assert::true($field->hasErrors());
@@ -115,184 +122,116 @@ class PhoneValidationTest extends Tester\TestCase
 	public function testValidatePhoneWithDefaultCountryWithType()
 	{
 		// Validator with correct country value, correct type
-		$field = $this->createControl();
+		$field = $this->createControl([
+			'phone' => [FormPhone\Controls\Phone::FIELD_COUNTRY => 'BE', FormPhone\Controls\Phone::FIELD_NUMBER => '0499123456'],
+		]);
 		// Set allowed country
 		$field->addCountry('BE');
 		// Set allowed phone type
 		$field->addPhoneType('mobile');
 		$field
 			->addRule(FormPhone\Forms\PhoneValidator::PHONE, 'Invalid phone')
-			->setValue('0499123456')
 			->validate();
 
 		Assert::false($field->hasErrors());
 
 		// Validator with correct country value, wrong type
-		$field = $this->createControl();
+		$field = $this->createControl([
+			'phone' => [FormPhone\Controls\Phone::FIELD_COUNTRY => 'BE', FormPhone\Controls\Phone::FIELD_NUMBER => '016123456'],
+		]);
 		// Set allowed country
 		$field->addCountry('BE');
 		// Set allowed phone type
 		$field->addPhoneType('mobile');
 		$field
 			->addRule(FormPhone\Forms\PhoneValidator::PHONE, 'Invalid phone')
-			->setValue('016123456')
 			->validate();
 
 		Assert::true($field->hasErrors());
 
 		// Validator with wrong country value, correct type
-		$field = $this->createControl();
+		$field = $this->createControl([
+			'phone' => [FormPhone\Controls\Phone::FIELD_COUNTRY => 'NL', FormPhone\Controls\Phone::FIELD_NUMBER => '0499123456'],
+		]);
 		// Set allowed country
 		$field->addCountry('NL');
 		// Set allowed phone type
 		$field->addPhoneType('mobile');
 		$field
 			->addRule(FormPhone\Forms\PhoneValidator::PHONE, 'Invalid phone')
-			->setValue('0499123456')
 			->validate();
 
 		Assert::true($field->hasErrors());
 
 		// Validator with wrong country value, wrong type
-		$field = $this->createControl();
+		$field = $this->createControl([
+			'phone' => [FormPhone\Controls\Phone::FIELD_COUNTRY => 'NL', FormPhone\Controls\Phone::FIELD_NUMBER => '016123456'],
+		]);
 		// Set allowed country
 		$field->addCountry('NL');
 		// Set allowed phone type
 		$field->addPhoneType('mobile');
 		$field
 			->addRule(FormPhone\Forms\PhoneValidator::PHONE, 'Invalid phone')
-			->setValue('016123456')
 			->validate();
 
 		Assert::true($field->hasErrors());
 
 		// Validator with multiple country values, one correct, correct type
-		$field = $this->createControl();
+		$field = $this->createControl([
+			'phone' => [FormPhone\Controls\Phone::FIELD_COUNTRY => 'BE', FormPhone\Controls\Phone::FIELD_NUMBER => '0499123456'],
+		]);
 		// Set allowed country
 		$field->setCountries(['BE', 'NL']);
 		// Set allowed phone type
 		$field->addPhoneType('mobile');
 		$field
 			->addRule(FormPhone\Forms\PhoneValidator::PHONE, 'Invalid phone')
-			->setValue('0499123456')
 			->validate();
 
 		Assert::false($field->hasErrors());
 
 		// Validator with multiple country values, one correct, wrong type
-		$field = $this->createControl();
+		$field = $this->createControl([
+			'phone' => [FormPhone\Controls\Phone::FIELD_COUNTRY => 'BE', FormPhone\Controls\Phone::FIELD_NUMBER => '016123456'],
+		]);
 		// Set allowed country
 		$field->setCountries(['BE', 'NL']);
 		// Set allowed phone type
 		$field->addPhoneType('mobile');
 		$field
 			->addRule(FormPhone\Forms\PhoneValidator::PHONE, 'Invalid phone')
-			->setValue('016123456')
 			->validate();
 
 		Assert::true($field->hasErrors());
 
 		// Validator with multiple country values, none correct, correct type
-		$field = $this->createControl();
+		$field = $this->createControl([
+			'phone' => [FormPhone\Controls\Phone::FIELD_COUNTRY => 'DE', FormPhone\Controls\Phone::FIELD_NUMBER => '0499123456'],
+		]);
 		// Set allowed country
 		$field->setCountries(['DE', 'NL']);
 		// Set allowed phone type
 		$field->addPhoneType('mobile');
 		$field
 			->addRule(FormPhone\Forms\PhoneValidator::PHONE, 'Invalid phone')
-			->setValue('0499123456')
 			->validate();
 
 		Assert::true($field->hasErrors());
 
 		// Validator with multiple country values, none correct, wrong type
-		$field = $this->createControl();
+		$field = $this->createControl([
+			'phone' => [FormPhone\Controls\Phone::FIELD_COUNTRY => 'DE', FormPhone\Controls\Phone::FIELD_NUMBER => '016123456'],
+		]);
 		// Set allowed country
 		$field->setCountries(['DE', 'NL']);
 		// Set allowed phone type
 		$field->addPhoneType('mobile');
 		$field
 			->addRule(FormPhone\Forms\PhoneValidator::PHONE, 'Invalid phone')
-			->setValue('016123456')
 			->validate();
 
 		Assert::true($field->hasErrors());
-	}
-
-	public function testValidatePhoneAutomaticDetectionFromInternationalInput()
-	{
-		// Validator with correct international input
-		$field = $this->createControl();
-		// Set allowed country
-		$field->addCountry('AUTO');
-		$field
-			->addRule(FormPhone\Forms\PhoneValidator::PHONE, 'Invalid phone')
-			->setValue('+3216123456')
-			->validate();
-
-		Assert::false($field->hasErrors());
-
-		// Validator with wrong international input
-		$field = $this->createControl();
-		$field
-			->addRule(FormPhone\Forms\PhoneValidator::PHONE, 'Invalid phone')
-			->setValue('003216123456')
-			->validate();
-
-		Assert::false($field->hasErrors());
-
-		// Validator with wrong international input
-		$field = $this->createControl();
-		// Set allowed country
-		$field->addCountry('AUTO');
-		$field
-			->addRule(FormPhone\Forms\PhoneValidator::PHONE, 'Invalid phone')
-			->setValue('+321456')
-			->validate();
-
-		Assert::true($field->hasErrors());
-	}
-
-	/**
-	 * @throws \IPub\Phone\Exceptions\NoValidCountryException
-	 */
-	public function testValidatePhoneNoDefaultCountryNoCountryField()
-	{
-		// Validator with no country field or given country
-		$field = $this->createControl();
-		$field
-			->addRule(FormPhone\Forms\PhoneValidator::PHONE, 'Invalid phone')
-			->setValue('016123456')
-			->validate();
-
-		// Validator with no country field or given country, wrong type
-		$field = $this->createControl();
-		// Set allowed phone type
-		$field->addPhoneType('mobile');
-		$field
-			->addRule(FormPhone\Forms\PhoneValidator::PHONE, 'Invalid phone')
-			->setValue('016123456')
-			->validate();
-
-		// Validator with no country field or given country, correct type
-		$field = $this->createControl();
-		// Set allowed phone type
-		$field->addPhoneType('mobile');
-		$field
-			->addRule(FormPhone\Forms\PhoneValidator::PHONE, 'Invalid phone')
-			->setValue('0499123456')
-			->validate();
-
-		// Validator with no country field or given country, correct type, faulty parameter
-		$field = $this->createControl();
-		// Set allowed country
-		$field->addCountry('AUTO');
-		// Set allowed phone type
-		$field->addPhoneType('mobile');
-		$field
-			->addRule(FormPhone\Forms\PhoneValidator::PHONE, 'Invalid phone')
-			->setValue('0499123456')
-			->validate();
 	}
 
 	/**
