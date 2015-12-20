@@ -270,11 +270,16 @@ class Phone extends Forms\Controls\TextInput
 	 */
 	public function getValue()
 	{
-		if ($this->country !== '' || $this->country !== '') {
+		if ($this->country === '' || $this->number === '') {
 			return NULL;
 		}
 
-		if (!$this->phoneUtils->isValid($this->number, $this->country)) {
+		try {
+			if (!$this->phoneUtils->isValid($this->number, $this->country)) {
+				return NULL;
+			}
+
+		} catch (IPub\Phone\Exceptions\NoValidCountryException $ex) {
 			return NULL;
 		}
 
