@@ -157,12 +157,28 @@ class Phone extends Forms\Controls\TextInput
 	 */
 	public function getCountries()
 	{
-		if (in_array('AUTO', $this->allowedCountries, TRUE)) {
+		if (in_array('AUTO', $this->allowedCountries, TRUE) || $this->allowedCountries === []) {
 			return $this->phoneUtils->getSupportedCountries();
 
 		} else {
 			return $this->allowedCountries;
 		}
+	}
+
+	/**
+	 * @param string $country
+	 *
+	 * @return $this
+	 *
+	 * @throws Exceptions\NoValidCountryException
+	 */
+	public function setDefaultCountry($country)
+	{
+		$country = $this->validateCountry($country);
+
+		$this->defaultCountry = strtoupper($country);
+
+		return $this;
 	}
 
 	/**
