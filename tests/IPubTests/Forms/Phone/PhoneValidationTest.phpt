@@ -119,7 +119,7 @@ class PhoneValidationTest extends Tester\TestCase
 		// Validator with correct country value, correct type
 		$field = $this->createControl();
 		// Set allowed country
-		$field->addCondition('BE');
+		$field->addCountry('BE');
 		// Set allowed phone type
 		$field->addPhoneType('mobile');
 		$field
@@ -132,7 +132,7 @@ class PhoneValidationTest extends Tester\TestCase
 		// Validator with correct country value, wrong type
 		$field = $this->createControl();
 		// Set allowed country
-		$field->addCondition('BE');
+		$field->addCountry('BE');
 		// Set allowed phone type
 		$field->addPhoneType('mobile');
 		$field
@@ -145,7 +145,7 @@ class PhoneValidationTest extends Tester\TestCase
 		// Validator with wrong country value, correct type
 		$field = $this->createControl();
 		// Set allowed country
-		$field->addCondition('NL');
+		$field->addCountry('NL');
 		// Set allowed phone type
 		$field->addPhoneType('mobile');
 		$field
@@ -158,7 +158,7 @@ class PhoneValidationTest extends Tester\TestCase
 		// Validator with wrong country value, wrong type
 		$field = $this->createControl();
 		// Set allowed country
-		$field->addCondition('NL');
+		$field->addCountry('NL');
 		// Set allowed phone type
 		$field->addPhoneType('mobile');
 		$field
