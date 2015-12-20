@@ -295,6 +295,9 @@ class Phone extends Forms\Controls\TextInput
 	{
 		$this->country = $this->getHttpData(Forms\Form::DATA_LINE, '[' . static::FIELD_COUNTRY . ']');
 		$this->number = $this->getHttpData(Forms\Form::DATA_LINE, '[' . static::FIELD_NUMBER . ']');
+		\Tracy\Debugger::dump($this->country);
+		\Tracy\Debugger::dump($this->number);
+		die;
 	}
 
 	/**
