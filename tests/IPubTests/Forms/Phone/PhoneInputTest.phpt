@@ -23,7 +23,6 @@ use Tester\Assert;
 
 use IPub;
 use IPub\FormPhone;
-use IPub\FormPhone\Exceptions;
 
 use IPub\Phone;
 
@@ -90,7 +89,7 @@ class PhoneInputTest extends Tester\TestCase
 	{
 		// Create form control
 		$control = new FormPhone\Controls\Phone($this->phone);
-		$control->addCountry('CZ');
+		$control->addCountry('CZ', 'US');
 		$control->setValue($input);
 
 		Assert::equal($expected, $control->getValue());
@@ -105,11 +104,11 @@ class PhoneInputTest extends Tester\TestCase
 	{
 		// Create form control
 		$control = new FormPhone\Controls\Phone($this->phone);
-		$control->addCountry('CZ');
+		$control->addCountry('CZ', 'US');
 
 		Assert::exception(function() use ($control, $input) {
 			$control->setValue($input);
-		}, 'Exceptions\InvalidArgumentException');
+		}, 'IPub\FormPhone\Exceptions\InvalidArgumentException');
 	}
 
 	public function testHtmlPartNumber()
@@ -223,11 +222,11 @@ class PhoneInputTest extends Tester\TestCase
 
 		Assert::exception(function() use ($control) {
 			$control->setDefaultCountry('XX');
-		}, 'Exceptions\NoValidCountryException');
+		}, 'IPub\FormPhone\Exceptions\NoValidCountryException');
 
 		Assert::exception(function() use ($control) {
 			$control->setDefaultCountry('CZE');
-		}, 'Exceptions\NoValidCountryException');
+		}, 'IPub\FormPhone\Exceptions\NoValidCountryException');
 	}
 
 	/**
