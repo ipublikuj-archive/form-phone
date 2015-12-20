@@ -89,7 +89,7 @@ class PhoneInputTest extends Tester\TestCase
 	{
 		// Create form control
 		$control = new FormPhone\Controls\Phone($this->phone);
-		$control->addCountry('CZ', 'US');
+		$control->setCountries(['CZ', 'US']);
 		$control->setValue($input);
 
 		Assert::equal($expected, $control->getValue());
