@@ -189,7 +189,7 @@ class PhoneInputTest extends Tester\TestCase
 			'phone' => [FormPhone\Controls\Phone::FIELD_COUNTRY => NULL, FormPhone\Controls\Phone::FIELD_NUMBER => '123'],
 		]);
 
-		Assert::true($control->isFilled());
+		Assert::false($control->isFilled());
 		Assert::null($control->getValue());
 	}
 
