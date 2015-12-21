@@ -102,7 +102,7 @@ class PhoneInputTest extends Tester\TestCase
 		$control->setValue($input);
 
 		Assert::type('IPub\Phone\Entities\Phone', $control->getValue());
-		Assert::equal($expected, $control->getValue()->getRawOutput());
+		Assert::equal($expected, (string) $control->getValue());
 	}
 
 	/**
@@ -206,7 +206,7 @@ class PhoneInputTest extends Tester\TestCase
 		]);
 
 		Assert::type('IPub\Phone\Entities\Phone', $control->getValue());
-		Assert::equal('+420234567890', $control->getValue()->getRawOutput());
+		Assert::equal('+420234567890', (string) $control->getValue());
 	}
 
 	public function testLoadHttpDataInvalid()
