@@ -92,7 +92,8 @@ class PhoneInputTest extends Tester\TestCase
 		$control->setCountries(['CZ', 'US']);
 		$control->setValue($input);
 
-		Assert::equal($expected, $control->getValue());
+		Assert::type('IPub\Phone\Entities\Phone', $control->getValue());
+		Assert::equal($expected, (string) $control->getValue());
 	}
 
 	/**
@@ -179,7 +180,8 @@ class PhoneInputTest extends Tester\TestCase
 			'phone' => [FormPhone\Controls\Phone::FIELD_COUNTRY => 'CZ', FormPhone\Controls\Phone::FIELD_NUMBER => '234567890'],
 		]);
 
-		Assert::equal('+420234567890', $control->getValue());
+		Assert::type('IPub\Phone\Entities\Phone', $control->getValue());
+		Assert::equal('+420234567890', (string) $control->getValue());
 	}
 
 	public function testLoadHttpDataInvalid()
