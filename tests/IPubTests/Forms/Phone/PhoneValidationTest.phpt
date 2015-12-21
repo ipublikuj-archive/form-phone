@@ -94,24 +94,24 @@ class PhoneValidationTest extends Tester\TestCase
 
 		Assert::false($field->hasErrors());
 
-		// Validator with multiple country values, value correct for second country in list
-		$field = $this->createControl([
-			'phone' => [FormPhone\Controls\Phone::FIELD_COUNTRY => 'BE', FormPhone\Controls\Phone::FIELD_NUMBER => '016123456'],
-		]);
-		// Set allowed country
-		$field->setCountries(['BE', 'NL']);
-		$field
-			->addRule(FormPhone\Forms\PhoneValidator::PHONE, 'Invalid phone')
-			->validate();
-
-		Assert::false($field->hasErrors());
-
 		// Validator with multiple wrong country values
 		$field = $this->createControl([
 			'phone' => [FormPhone\Controls\Phone::FIELD_COUNTRY => 'DE', FormPhone\Controls\Phone::FIELD_NUMBER => '016123456'],
 		]);
 		// Set allowed country
 		$field->setCountries(['DE', 'NL']);
+		$field
+			->addRule(FormPhone\Forms\PhoneValidator::PHONE, 'Invalid phone')
+			->validate();
+
+		Assert::true($field->hasErrors());
+
+		// Validator with multiple wrong country values
+		$field = $this->createControl([
+			'phone' => [FormPhone\Controls\Phone::FIELD_COUNTRY => 'DE', FormPhone\Controls\Phone::FIELD_NUMBER => '016123456'],
+		]);
+		// Set allowed country
+		$field->setCountries(['BE', 'DE', 'NL']);
 		$field
 			->addRule(FormPhone\Forms\PhoneValidator::PHONE, 'Invalid phone')
 			->validate();

@@ -145,7 +145,7 @@ class Phone extends Forms\Controls\TextInput
 		if (strtoupper($country) === 'AUTO') {
 			$this->allowedCountries = ['AUTO'];
 
-		} else if ($key = array_search('AUTO', $this->allowedCountries) AND $key !== FALSE) {
+		} else if (($key = array_search('AUTO', $this->allowedCountries)) && $key !== FALSE) {
 			unset($this->allowedCountries[$key]);
 		}
 
@@ -266,7 +266,7 @@ class Phone extends Forms\Controls\TextInput
 	}
 
 	/**
-	 * @return string|NULL
+	 * @return IPub\Phone\Entities\Phone|NULL
 	 */
 	public function getValue()
 	{
@@ -275,15 +275,14 @@ class Phone extends Forms\Controls\TextInput
 		}
 
 		try {
-			if (!$this->phoneUtils->isValid($this->number, $this->country)) {
-				return NULL;
-			}
+			// Try to parse number & country
+			$number = $this->phoneUtils->parse($this->number, $this->country);
 
-		} catch (IPub\Phone\Exceptions\NoValidCountryException $ex) {
+			return $number === NULL ? NULL : $number;
+
+		} catch (IPub\Phone\Exceptions\InvalidArgumentException $ex) {
 			return NULL;
 		}
-
-		return $this->phoneUtils->format($this->number, $this->country, PhoneUtils::FORMAT_E164);
 	}
 
 	/**
@@ -316,7 +315,10 @@ class Phone extends Forms\Controls\TextInput
 	{
 		$name = $this->getHtmlName();
 
-		if ($translator = $this->getTranslator() AND $translator instanceof Localization\ITranslator AND method_exists($translator, 'getLocale')) {
+		// Try to get translator
+		$translator = $this->getTranslator();
+
+		if ($translator instanceof Localization\ITranslator && method_exists($translator, 'getLocale')) {
 			$locale = $translator->getLocale();
 		} else {
 			$locale = 'en_US';
