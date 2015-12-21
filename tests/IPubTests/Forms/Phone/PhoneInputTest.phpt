@@ -102,7 +102,7 @@ class PhoneInputTest extends Tester\TestCase
 		$control->setValue($input);
 
 		Assert::type('IPub\Phone\Entities\Phone', $control->getValue());
-		Assert::equal($expected, (string) $control->getValue());
+		Assert::equal($expected, $control->getValue()->getInternationalNumber());
 	}
 
 	/**
@@ -134,7 +134,7 @@ class PhoneInputTest extends Tester\TestCase
 		$control->setCountries(['CZ', 'US']);
 		$control->setValue($input);
 
-		Assert::equal($expected, (string) $control->getValue());
+		Assert::equal($expected, $control->getValue());
 	}
 
 	public function testHtmlPartNumber()
@@ -206,7 +206,7 @@ class PhoneInputTest extends Tester\TestCase
 		]);
 
 		Assert::type('IPub\Phone\Entities\Phone', $control->getValue());
-		Assert::equal('+420234567890', (string) $control->getValue());
+		Assert::equal('+420234567890', $control->getValue()->getInternationalNumber());
 	}
 
 	public function testLoadHttpDataInvalid()
