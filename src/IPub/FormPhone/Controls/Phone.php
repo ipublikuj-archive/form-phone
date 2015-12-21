@@ -256,7 +256,7 @@ class Phone extends Forms\Controls\TextInput
 				$phone = $this->phoneUtils->parse($value, $country);
 
 				$this->country = $phone->getCountry();
-				$this->number = $phone->getNationalNumber();
+				$this->number = str_replace(' ', '', $phone->getNationalNumber());
 
 				return $this;
 			}
