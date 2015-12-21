@@ -280,6 +280,9 @@ class Phone extends Forms\Controls\TextInput
 
 			return $number === NULL ? NULL : $number;
 
+		} catch (IPub\Phone\Exceptions\NoValidCountryException $ex) {
+			return NULL;
+
 		} catch (IPub\Phone\Exceptions\InvalidArgumentException $ex) {
 			return NULL;
 		}

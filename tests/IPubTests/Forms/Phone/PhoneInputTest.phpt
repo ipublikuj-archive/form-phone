@@ -41,7 +41,6 @@ class PhoneInputTest extends Tester\TestCase
 	public function dataValidPhoneNumbers()
 	{
 		return [
-			[NULL, NULL],
 			['+1-734-555-1212', '+17345551212'],
 			['+420234567890', '+420234567890'],
 			['234 567 890', '+420234567890'],
@@ -63,6 +62,16 @@ class PhoneInputTest extends Tester\TestCase
 			['123'],
 			[123],
 			['+1@800@692@7753'],
+		];
+	}
+
+	/**
+	 * @return array[]|array
+	 */
+	public function dataEmptyPhoneNumbers()
+	{
+		return [
+			[NULL, NULL],
 		];
 	}
 
@@ -105,11 +114,27 @@ class PhoneInputTest extends Tester\TestCase
 	{
 		// Create form control
 		$control = new FormPhone\Controls\Phone($this->phone);
-		$control->addCountry('CZ', 'US');
+		$control->setCountries(['CZ', 'US']);
 
 		Assert::exception(function() use ($control, $input) {
 			$control->setValue($input);
 		}, 'IPub\FormPhone\Exceptions\InvalidArgumentException');
+	}
+
+	/**
+	 * @dataProvider dataEmptyPhoneNumbers
+	 *
+	 * @param string
+	 * @param string
+	 */
+	public function testEmptyPhoneNumbers($input, $expected)
+	{
+		// Create form control
+		$control = new FormPhone\Controls\Phone($this->phone);
+		$control->setCountries(['CZ', 'US']);
+		$control->setValue($input);
+
+		Assert::equal($expected, (string) $control->getValue());
 	}
 
 	public function testHtmlPartNumber()
