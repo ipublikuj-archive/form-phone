@@ -283,7 +283,7 @@ class Phone extends Forms\Controls\TextInput
 		} catch (IPub\Phone\Exceptions\NoValidCountryException $ex) {
 			return NULL;
 
-		} catch (IPub\Phone\Exceptions\InvalidArgumentException $ex) {
+		} catch (IPub\Phone\Exceptions\NoValidPhoneException $ex) {
 			return NULL;
 		}
 	}
