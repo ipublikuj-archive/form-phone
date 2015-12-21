@@ -1,8 +1,9 @@
-build:
+checks:
     php:
         code_rating: true
         duplication: true
 
+build:
     environment:
         php:
             version: 5.6
