@@ -1,4 +1,8 @@
 build:
+    php:
+        code_rating: true
+        duplication: true
+
     environment:
         php:
             version: 5.6
