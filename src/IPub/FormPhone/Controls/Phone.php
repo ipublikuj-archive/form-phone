@@ -295,16 +295,17 @@ class Phone extends Forms\Controls\TextInput
 	 */
 	public function loadHttpData()
 	{
-		$this->country = $this->getHttpData(Forms\Form::DATA_LINE, '[' . static::FIELD_COUNTRY . ']');
-		$this->number = $this->getHttpData(Forms\Form::DATA_LINE, '[' . static::FIELD_NUMBER . ']');
+		$this->country = (string) $this->getHttpData(Forms\Form::DATA_LINE, '[' . static::FIELD_COUNTRY . ']');
+		$this->number = (string) $this->getHttpData(Forms\Form::DATA_LINE, '[' . static::FIELD_NUMBER . ']');
 	}
 
 	/**
-	 * @return string
+	 * @return Utils\Html
 	 */
 	public function getControl()
 	{
-		return $this->getControlPart(static::FIELD_COUNTRY) . $this->getControlPart(static::FIELD_NUMBER);
+		return Utils\Html::el()
+			->add($this->getControlPart(static::FIELD_COUNTRY) . $this->getControlPart(static::FIELD_NUMBER));
 	}
 
 	/**
@@ -440,11 +441,11 @@ class Phone extends Forms\Controls\TextInput
 	public static function register(PhoneUtils $phoneUtils, $method = 'addPhone')
 	{
 		// Check for multiple registration
-		if (static::$registered) {
+		if (self::$registered) {
 			throw new Nette\InvalidStateException('Phone control already registered.');
 		}
 
-		static::$registered = TRUE;
+		self::$registered = TRUE;
 
 		$class = function_exists('get_called_class') ? get_called_class() : __CLASS__;
 		Forms\Container::extensionMethod(
