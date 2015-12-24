@@ -4,7 +4,7 @@ API for Phone is accessible in global object `window.IPub.Forms.Phone`.
 
 ### Loading
 
-Serverside part of Phone form element is element with custom data attribute `data-ipub-forms-phone`. This element can be initialized with method `init()`.
+Server-side part of Phone form element is element with custom data attribute `data-ipub-forms-phone`. This element can be initialized with method `init()`.
 
 ```js
 var phone = new IPub.Forms.Phone($('[data-ipub-forms-phone]'));
@@ -25,4 +25,4 @@ Finally you can initialize phone field on the page by calling:
 IPub.Forms.Phone.load();
 ```
 
-This will be automatically called when document is ready.
+This plugin is initialized automatically, so you don't need to add another calls, you just need to inject JS file into your page.
