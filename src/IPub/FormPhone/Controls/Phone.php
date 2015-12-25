@@ -68,14 +68,14 @@ class Phone extends Forms\Controls\TextInput
 	private $allowedTypes = [];
 
 	/**
-	 * @var string
+	 * @var string|NULL
 	 */
-	private $number;
+	private $number = NULL;
 
 	/**
-	 * @var string
+	 * @var string|NULL
 	 */
-	private $country;
+	private $country = NULL;
 
 	/**
 	 * @var string
@@ -106,7 +106,7 @@ class Phone extends Forms\Controls\TextInput
 	 *
 	 * @throws Exceptions\NoValidCountryException
 	 */
-	public function setCountries(array $countries = [])
+	public function setAllowedCountries(array $countries = [])
 	{
 		$this->allowedCountries = [];
 
@@ -134,7 +134,7 @@ class Phone extends Forms\Controls\TextInput
 	 *
 	 * @throws Exceptions\NoValidCountryException
 	 */
-	public function addCountry($country)
+	public function addAllowedCountry($country)
 	{
 		$country = $this->validateCountry($country);
 		$this->allowedCountries[] = strtoupper($country);
@@ -155,7 +155,7 @@ class Phone extends Forms\Controls\TextInput
 	/**
 	 * @return array
 	 */
-	public function getCountries()
+	public function getAllowedCountries()
 	{
 		if (in_array('AUTO', $this->allowedCountries, TRUE) || $this->allowedCountries === []) {
 			return $this->phoneUtils->getSupportedCountries();
@@ -193,7 +193,7 @@ class Phone extends Forms\Controls\TextInput
 	 *
 	 * @throws Exceptions\NoValidTypeException
 	 */
-	public function setPhoneTypes(array $types = [])
+	public function setAllowedPhoneTypes(array $types = [])
 	{
 		$this->allowedTypes = [];
 
@@ -216,7 +216,7 @@ class Phone extends Forms\Controls\TextInput
 	 *
 	 * @throws Exceptions\NoValidTypeException
 	 */
-	public function addPhoneType($type)
+	public function addAllowedPhoneType($type)
 	{
 		$type = $this->validateType($type);
 		$this->allowedTypes[] = strtoupper($type);
@@ -230,7 +230,7 @@ class Phone extends Forms\Controls\TextInput
 	/**
 	 * @return array
 	 */
-	public function getPhoneTypes()
+	public function getAllowedPhoneTypes()
 	{
 		return $this->allowedTypes;
 	}
@@ -251,7 +251,7 @@ class Phone extends Forms\Controls\TextInput
 			return $this;
 		}
 
-		foreach($this->getCountries() as $country) {
+		foreach($this->getAllowedCountries() as $country) {
 			if ($this->phoneUtils->isValid($value, $country)) {
 				$phone = $this->phoneUtils->parse($value, $country);
 
@@ -295,8 +295,11 @@ class Phone extends Forms\Controls\TextInput
 	 */
 	public function loadHttpData()
 	{
-		$this->country = (string) $this->getHttpData(Forms\Form::DATA_LINE, '[' . static::FIELD_COUNTRY . ']');
-		$this->number = (string) $this->getHttpData(Forms\Form::DATA_LINE, '[' . static::FIELD_NUMBER . ']');
+		$country = $this->getHttpData(Forms\Form::DATA_LINE, '[' . static::FIELD_COUNTRY . ']');
+		$this->country = (string) $country === '' | $country === NULL ? NULL : $country;
+
+		$number = $this->getHttpData(Forms\Form::DATA_LINE, '[' . static::FIELD_NUMBER . ']');
+		$this->number = (string) $number === '' | $number === NULL ? NULL : $number;
 	}
 
 	/**
@@ -330,7 +333,7 @@ class Phone extends Forms\Controls\TextInput
 
 		if ($key === static::FIELD_COUNTRY) {
 			$control = Forms\Helpers::createSelectBox(
-				array_reduce($this->getCountries(), function (array $result, $row) use ($locale) {
+				array_reduce($this->getAllowedCountries(), function (array $result, $row) use ($locale) {
 					$countryName = geocoding\Locale::getDisplayRegion(
 						geocoding\Locale::countryCodeToLocale($row),
 						$locale

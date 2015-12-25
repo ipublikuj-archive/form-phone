@@ -58,8 +58,8 @@ By default is country detection set to AUTO, if you want to specify allowed coun
 
 ```php
 $form->addPhone('phone', 'Phone number:')
-    ->addCountry('CZ')
-    ->addCountry('GB')
+    ->addAllowedCountry('CZ')
+    ->addAllowedCountry('GB')
     ->addCondition(\Nette\Application\UI\Form::FILLED)
         ->addRule(\IPub\FormPhone\Forms\PhoneValidator::PHONE, 'Phone is invalid');
 ```
@@ -68,7 +68,7 @@ or
 
 ```php
 $form->addPhone('phone', 'Phone number:')
-    ->setCountries(['CZ', 'GB'])
+    ->setAllowedCountries(['CZ', 'GB'])
     ->addCondition(\Nette\Application\UI\Form::FILLED)
         ->addRule(\IPub\FormPhone\Forms\PhoneValidator::PHONE, 'Phone is invalid');
 ```
@@ -81,7 +81,7 @@ You can limit allowed phone to specific phone types eg. mobile, land line etc.
 
 ```php
 $form->addPhone('phone', 'Phone number:')
-    ->addPhoneType(\IPub\Phone\Phone::TYPE_MOBILE)
+    ->addAllowedPhoneType(\IPub\Phone\Phone::TYPE_MOBILE)
     ->addCondition(\Nette\Application\UI\Form::FILLED)
         ->addRule(\IPub\FormPhone\Forms\PhoneValidator::PHONE, 'Phone is invalid');
 ```
@@ -90,7 +90,7 @@ or
 
 ```php
 $form->addPhone('phone', 'Phone number:')
-    ->setPhoneTypes([\IPub\Phone\Phone::TYPE_MOBILE, \IPub\Phone\Phone::TYPE_PAGER])
+    ->setAllowedPhoneTypes([\IPub\Phone\Phone::TYPE_MOBILE, \IPub\Phone\Phone::TYPE_PAGER])
     ->addCondition(\Nette\Application\UI\Form::FILLED)
         ->addRule(\IPub\FormPhone\Forms\PhoneValidator::PHONE, 'Phone is invalid');
 ```

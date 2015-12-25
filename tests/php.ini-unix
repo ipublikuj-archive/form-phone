@@ -1,3 +1,4 @@
+extension = intl.so
 extension = xdebug.so
 
 [xdebug]

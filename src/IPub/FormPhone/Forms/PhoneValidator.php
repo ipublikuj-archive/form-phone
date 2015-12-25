@@ -67,10 +67,10 @@ class PhoneValidator extends Phone\Forms\PhoneValidator
 		$phoneNumberUtil = PhoneNumberUtil::getInstance();
 
 		// Get list of allowed countries from params
-		$allowedCountries = self::determineCountries($control->getCountries());
+		$allowedCountries = self::determineCountries($control->getAllowedCountries());
 
 		// Get list of allowed phone types
-		$allowedTypes = self::determineTypes($control->getPhoneTypes());
+		$allowedTypes = self::determineTypes($control->getAllowedPhoneTypes());
 
 		// Perform validation
 		foreach ($allowedCountries as $country) {

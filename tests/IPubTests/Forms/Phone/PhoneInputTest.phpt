@@ -76,6 +76,29 @@ class PhoneInputTest extends Tester\TestCase
 	}
 
 	/**
+	 * @return array[]|array
+	 */
+	public function dataAllowedCountries()
+	{
+		return [
+			[['CZ', 'SK'], ['CZ', 'SK']],
+			[['US'], ['US']],
+		];
+	}
+
+	/**
+	 * @return array[]|array
+	 */
+	public function dataInvalidAllowedCountries()
+	{
+		return [
+			[['CZ', 'SK', 'XY'], ['CZ', 'SK', 'XY']],
+			[['US', 'XY'], ['US', 'XY']],
+			[['XY'], ['XY']],
+		];
+	}
+
+	/**
 	 * Set up
 	 */
 	public function setUp()
@@ -98,7 +121,7 @@ class PhoneInputTest extends Tester\TestCase
 	{
 		// Create form control
 		$control = new FormPhone\Controls\Phone($this->phone);
-		$control->setCountries(['CZ', 'US']);
+		$control->setAllowedCountries(['CZ', 'US']);
 		$control->setValue($input);
 
 		Assert::type('IPub\Phone\Entities\Phone', $control->getValue());
@@ -114,7 +137,7 @@ class PhoneInputTest extends Tester\TestCase
 	{
 		// Create form control
 		$control = new FormPhone\Controls\Phone($this->phone);
-		$control->setCountries(['CZ', 'US']);
+		$control->setAllowedCountries(['CZ', 'US']);
 
 		Assert::exception(function() use ($control, $input) {
 			$control->setValue($input);
@@ -131,10 +154,79 @@ class PhoneInputTest extends Tester\TestCase
 	{
 		// Create form control
 		$control = new FormPhone\Controls\Phone($this->phone);
-		$control->setCountries(['CZ', 'US']);
+		$control->setAllowedCountries(['CZ', 'US']);
 		$control->setValue($input);
 
 		Assert::equal($expected, $control->getValue());
+	}
+
+	/**
+	 * @dataProvider dataAllowedCountries
+	 *
+	 * @param string
+	 * @param string
+	 */
+	public function testSetAllowedCountries($input, $expected)
+	{
+		// Create form control
+		$control = new FormPhone\Controls\Phone($this->phone);
+		$control->setAllowedCountries($input);
+
+		Assert::equal($expected, $control->getAllowedCountries());
+	}
+
+	/**
+	 * @dataProvider dataInvalidAllowedCountries
+	 *
+	 * @param string
+	 * @param string
+	 */
+	public function testSetInvalidAllowedCountries($input, $expected)
+	{
+		// Create form control
+		$control = new FormPhone\Controls\Phone($this->phone);
+
+		Assert::exception(function() use ($control, $input) {
+			$control->setAllowedCountries($input);
+		}, 'IPub\FormPhone\Exceptions\NoValidCountryException');
+	}
+
+
+	public function testDefaultCountry()
+	{
+		// Create form control
+		$control = $this->createControl();
+
+		$dq = Tester\DomQuery::fromHtml((string) $control->getControlPart(FormPhone\Controls\Phone::FIELD_COUNTRY));
+		Assert::false($dq->has('select option[selected]'));
+
+		// Define default country
+		$control->setDefaultCountry('CZ');
+
+		$dq = Tester\DomQuery::fromHtml((string) $control->getControlPart(FormPhone\Controls\Phone::FIELD_COUNTRY));
+
+		Assert::true($dq->has('select option[selected]'));
+		Assert::true($dq->has('select option[value=CZ][selected]'));
+
+		// Define default country
+		$control->setDefaultCountry(NULL);
+
+		$dq = Tester\DomQuery::fromHtml((string) $control->getControlPart(FormPhone\Controls\Phone::FIELD_COUNTRY));
+		Assert::false($dq->has('select option[selected]'));
+	}
+
+	public function testInvalidDefaultCountry()
+	{
+		// Create form control
+		$control = $this->createControl();
+
+		Assert::exception(function() use ($control) {
+			$control->setDefaultCountry('xy');
+		}, 'IPub\FormPhone\Exceptions\NoValidCountryException');
+
+		Assert::exception(function() use ($control) {
+			$control->setDefaultCountry('CZE');
+		}, 'IPub\FormPhone\Exceptions\NoValidCountryException');
 	}
 
 	public function testHtmlPartNumber()
@@ -189,6 +281,18 @@ class PhoneInputTest extends Tester\TestCase
 		Assert::true($dq->has('select option[value=CZ][selected]'));
 	}
 
+	public function testHtmlPartLabel()
+	{
+		// Create form
+		$form = new Forms\Form;
+		// Create form control
+		$control = new FormPhone\Controls\Phone($this->phone);
+		// Add form control to form
+		$form->addComponent($control, 'phone');
+
+		Assert::null($control->getLabelPart());
+	}
+
 	public function testLoadHttpDataEmpty()
 	{
 		// Create form control
@@ -218,42 +322,6 @@ class PhoneInputTest extends Tester\TestCase
 
 		Assert::false($control->isFilled());
 		Assert::null($control->getValue());
-	}
-
-	public function testDefaultCountry()
-	{
-		// Create form control
-		$control = $this->createControl();
-
-		$dq = Tester\DomQuery::fromHtml((string) $control->getControlPart(FormPhone\Controls\Phone::FIELD_COUNTRY));
-		Assert::false($dq->has('select option[selected]'));
-
-		// Define default country
-		$control->setDefaultCountry('CZ');
-
-		$dq = Tester\DomQuery::fromHtml((string) $control->getControlPart(FormPhone\Controls\Phone::FIELD_COUNTRY));
-		Assert::true($dq->has('select option[selected]'));
-		Assert::true($dq->has('select option[value=CZ][selected]'));
-
-		// Define default country
-		$control->setDefaultCountry(NULL);
-
-		$dq = Tester\DomQuery::fromHtml((string) $control->getControlPart(FormPhone\Controls\Phone::FIELD_COUNTRY));
-		Assert::false($dq->has('select option[selected]'));
-	}
-
-	public function testInvalidDefaultCountry()
-	{
-		// Create form control
-		$control = $this->createControl();
-
-		Assert::exception(function() use ($control) {
-			$control->setDefaultCountry('xy');
-		}, 'IPub\FormPhone\Exceptions\NoValidCountryException');
-
-		Assert::exception(function() use ($control) {
-			$control->setDefaultCountry('CZE');
-		}, 'IPub\FormPhone\Exceptions\NoValidCountryException');
 	}
 
 	/**

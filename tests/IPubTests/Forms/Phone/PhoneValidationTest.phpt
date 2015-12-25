@@ -63,7 +63,7 @@ class PhoneValidationTest extends Tester\TestCase
 			'phone' => [FormPhone\Controls\Phone::FIELD_COUNTRY => 'BE', FormPhone\Controls\Phone::FIELD_NUMBER => '016123456'],
 		]);
 		// Set allowed country
-		$field->addCountry('BE');
+		$field->addAllowedCountry('BE');
 		$field
 			->addRule(FormPhone\Forms\PhoneValidator::PHONE, 'Invalid phone')
 			->validate();
@@ -75,7 +75,7 @@ class PhoneValidationTest extends Tester\TestCase
 			'phone' => [FormPhone\Controls\Phone::FIELD_COUNTRY => 'NL', FormPhone\Controls\Phone::FIELD_NUMBER => '016123456'],
 		]);
 		// Set allowed country
-		$field->addCountry('NL');
+		$field->addAllowedCountry('NL');
 		$field
 			->addRule(FormPhone\Forms\PhoneValidator::PHONE, 'Invalid phone')
 			->validate();
@@ -87,7 +87,7 @@ class PhoneValidationTest extends Tester\TestCase
 			'phone' => [FormPhone\Controls\Phone::FIELD_COUNTRY => 'BE', FormPhone\Controls\Phone::FIELD_NUMBER => '016123456'],
 		]);
 		// Set allowed country
-		$field->setCountries(['BE', 'NL']);
+		$field->setAllowedCountries(['BE', 'NL']);
 		$field
 			->addRule(FormPhone\Forms\PhoneValidator::PHONE, 'Invalid phone')
 			->validate();
@@ -99,7 +99,7 @@ class PhoneValidationTest extends Tester\TestCase
 			'phone' => [FormPhone\Controls\Phone::FIELD_COUNTRY => 'DE', FormPhone\Controls\Phone::FIELD_NUMBER => '016123456'],
 		]);
 		// Set allowed country
-		$field->setCountries(['DE', 'NL']);
+		$field->setAllowedCountries(['DE', 'NL']);
 		$field
 			->addRule(FormPhone\Forms\PhoneValidator::PHONE, 'Invalid phone')
 			->validate();
@@ -111,7 +111,7 @@ class PhoneValidationTest extends Tester\TestCase
 			'phone' => [FormPhone\Controls\Phone::FIELD_COUNTRY => 'DE', FormPhone\Controls\Phone::FIELD_NUMBER => '016123456'],
 		]);
 		// Set allowed country
-		$field->setCountries(['BE', 'DE', 'NL']);
+		$field->setAllowedCountries(['BE', 'DE', 'NL']);
 		$field
 			->addRule(FormPhone\Forms\PhoneValidator::PHONE, 'Invalid phone')
 			->validate();
@@ -126,9 +126,9 @@ class PhoneValidationTest extends Tester\TestCase
 			'phone' => [FormPhone\Controls\Phone::FIELD_COUNTRY => 'BE', FormPhone\Controls\Phone::FIELD_NUMBER => '0499123456'],
 		]);
 		// Set allowed country
-		$field->addCountry('BE');
+		$field->addAllowedCountry('BE');
 		// Set allowed phone type
-		$field->addPhoneType('mobile');
+		$field->addAllowedPhoneType('mobile');
 		$field
 			->addRule(FormPhone\Forms\PhoneValidator::PHONE, 'Invalid phone')
 			->validate();
@@ -140,9 +140,9 @@ class PhoneValidationTest extends Tester\TestCase
 			'phone' => [FormPhone\Controls\Phone::FIELD_COUNTRY => 'BE', FormPhone\Controls\Phone::FIELD_NUMBER => '016123456'],
 		]);
 		// Set allowed country
-		$field->addCountry('BE');
+		$field->addAllowedCountry('BE');
 		// Set allowed phone type
-		$field->addPhoneType('mobile');
+		$field->addAllowedPhoneType('mobile');
 		$field
 			->addRule(FormPhone\Forms\PhoneValidator::PHONE, 'Invalid phone')
 			->validate();
@@ -154,9 +154,9 @@ class PhoneValidationTest extends Tester\TestCase
 			'phone' => [FormPhone\Controls\Phone::FIELD_COUNTRY => 'NL', FormPhone\Controls\Phone::FIELD_NUMBER => '0499123456'],
 		]);
 		// Set allowed country
-		$field->addCountry('NL');
+		$field->addAllowedCountry('NL');
 		// Set allowed phone type
-		$field->addPhoneType('mobile');
+		$field->addAllowedPhoneType('mobile');
 		$field
 			->addRule(FormPhone\Forms\PhoneValidator::PHONE, 'Invalid phone')
 			->validate();
@@ -168,9 +168,9 @@ class PhoneValidationTest extends Tester\TestCase
 			'phone' => [FormPhone\Controls\Phone::FIELD_COUNTRY => 'NL', FormPhone\Controls\Phone::FIELD_NUMBER => '016123456'],
 		]);
 		// Set allowed country
-		$field->addCountry('NL');
+		$field->addAllowedCountry('NL');
 		// Set allowed phone type
-		$field->addPhoneType('mobile');
+		$field->addAllowedPhoneType('mobile');
 		$field
 			->addRule(FormPhone\Forms\PhoneValidator::PHONE, 'Invalid phone')
 			->validate();
@@ -182,9 +182,9 @@ class PhoneValidationTest extends Tester\TestCase
 			'phone' => [FormPhone\Controls\Phone::FIELD_COUNTRY => 'BE', FormPhone\Controls\Phone::FIELD_NUMBER => '0499123456'],
 		]);
 		// Set allowed country
-		$field->setCountries(['BE', 'NL']);
+		$field->setAllowedCountries(['BE', 'NL']);
 		// Set allowed phone type
-		$field->addPhoneType('mobile');
+		$field->addAllowedPhoneType('mobile');
 		$field
 			->addRule(FormPhone\Forms\PhoneValidator::PHONE, 'Invalid phone')
 			->validate();
@@ -196,9 +196,9 @@ class PhoneValidationTest extends Tester\TestCase
 			'phone' => [FormPhone\Controls\Phone::FIELD_COUNTRY => 'BE', FormPhone\Controls\Phone::FIELD_NUMBER => '016123456'],
 		]);
 		// Set allowed country
-		$field->setCountries(['BE', 'NL']);
+		$field->setAllowedCountries(['BE', 'NL']);
 		// Set allowed phone type
-		$field->addPhoneType('mobile');
+		$field->addAllowedPhoneType('mobile');
 		$field
 			->addRule(FormPhone\Forms\PhoneValidator::PHONE, 'Invalid phone')
 			->validate();
@@ -210,9 +210,9 @@ class PhoneValidationTest extends Tester\TestCase
 			'phone' => [FormPhone\Controls\Phone::FIELD_COUNTRY => 'DE', FormPhone\Controls\Phone::FIELD_NUMBER => '0499123456'],
 		]);
 		// Set allowed country
-		$field->setCountries(['DE', 'NL']);
+		$field->setAllowedCountries(['DE', 'NL']);
 		// Set allowed phone type
-		$field->addPhoneType('mobile');
+		$field->addAllowedPhoneType('mobile');
 		$field
 			->addRule(FormPhone\Forms\PhoneValidator::PHONE, 'Invalid phone')
 			->validate();
@@ -224,9 +224,9 @@ class PhoneValidationTest extends Tester\TestCase
 			'phone' => [FormPhone\Controls\Phone::FIELD_COUNTRY => 'DE', FormPhone\Controls\Phone::FIELD_NUMBER => '016123456'],
 		]);
 		// Set allowed country
-		$field->setCountries(['DE', 'NL']);
+		$field->setAllowedCountries(['DE', 'NL']);
 		// Set allowed phone type
-		$field->addPhoneType('mobile');
+		$field->addAllowedPhoneType('mobile');
 		$field
 			->addRule(FormPhone\Forms\PhoneValidator::PHONE, 'Invalid phone')
 			->validate();
