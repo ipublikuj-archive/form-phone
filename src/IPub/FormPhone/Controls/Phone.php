@@ -296,10 +296,10 @@ class Phone extends Forms\Controls\TextInput
 	public function loadHttpData()
 	{
 		$country = $this->getHttpData(Forms\Form::DATA_LINE, '[' . static::FIELD_COUNTRY . ']');
-		$this->country = ($country === '' | $country === NULL) ? NULL : (string) $country;
+		$this->country = ($country === '' || $country === NULL) ? NULL : (string) $country;
 
 		$number = $this->getHttpData(Forms\Form::DATA_LINE, '[' . static::FIELD_NUMBER . ']');
-		$this->number = ($number === '' | $number === NULL) ? NULL : (string) $number;
+		$this->number = ($number === '' || $number === NULL) ? NULL : (string) $number;
 	}
 
 	/**
