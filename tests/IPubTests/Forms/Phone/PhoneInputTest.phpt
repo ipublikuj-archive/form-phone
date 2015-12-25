@@ -290,9 +290,7 @@ class PhoneInputTest extends Tester\TestCase
 		// Add form control to form
 		$form->addComponent($control, 'phone');
 
-		$dq = Tester\DomQuery::fromHtml((string) $control->getControl());
-
-		Assert::true($dq->has('input[value=234567890]'));
+		Assert::null($control->getLabelPart());
 	}
 
 	public function testLoadHttpDataEmpty()
