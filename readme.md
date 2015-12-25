@@ -1,6 +1,5 @@
 # Form Phone control
 
-
 [![Build Status](https://img.shields.io/travis/iPublikuj/form-phone.svg?style=flat-square)](https://travis-ci.org/iPublikuj/form-phone)
 [![Scrutinizer Code Coverage](https://img.shields.io/scrutinizer/coverage/g/iPublikuj/form-phone.svg?style=flat-square)](https://scrutinizer-ci.com/g/iPublikuj/form-phone/?branch=master)
 [![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/iPublikuj/form-phone.svg?style=flat-square)](https://scrutinizer-ci.com/g/iPublikuj/form-phone/?branch=master)

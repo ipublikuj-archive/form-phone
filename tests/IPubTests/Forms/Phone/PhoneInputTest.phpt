@@ -42,13 +42,6 @@ class PhoneInputTest extends Tester\TestCase
 	{
 		return [
 			['+1-734-555-1212', '+17345551212'],
-			['+420234567890', '+420234567890'],
-			['234 567 890', '+420234567890'],
-			['+420.234.567.890', '+420234567890'],
-			['+420-234-567-890', '+420234567890'],
-			['00420234567890', '+420234567890'],
-			['420234567890', '+420234567890'],
-			[420234567890, '+420234567890'],
 		];
 	}
 
@@ -240,12 +233,10 @@ class PhoneInputTest extends Tester\TestCase
 
 		// Set some value
 		$control->setValue('+420234567890');
-		$control->setRequired(TRUE);
 
 		$dq = Tester\DomQuery::fromHtml((string) $control->getControlPart(FormPhone\Controls\Phone::FIELD_NUMBER));
 
 		Assert::true($dq->has('input[value=234567890]'));
-		Assert::true($dq->has('input[data-nette-rules]'));
 	}
 
 	public function testHtmlPartCountry()
@@ -292,7 +283,9 @@ class PhoneInputTest extends Tester\TestCase
 		// Add form control to form
 		$form->addComponent($control, 'phone');
 
-		Assert::null($control->getLabelPart());
+		$dq = Tester\DomQuery::fromHtml((string) $control->getControl());
+
+		Assert::true($dq->has('input[value=234567890]'));
 	}
 
 	public function testLoadHttpDataEmpty()
