@@ -61,7 +61,7 @@ class PhoneValidator extends Phone\Forms\PhoneValidator
 		}
 
 		// Get form element value
-		$value = (string) $control->getValue();
+		$value = $control->getValue()->getRawOutput();
 
 		// Get instance of phone number util
 		$phoneNumberUtil = PhoneNumberUtil::getInstance();
