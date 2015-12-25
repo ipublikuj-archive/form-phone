@@ -15,13 +15,9 @@
 namespace IPub\FormPhone\Controls;
 
 use Nette;
-use Nette\Application\UI;
-use Nette\Bridges;
 use Nette\Forms;
 use Nette\Localization;
 use Nette\Utils;
-
-use Latte;
 
 use IPub;
 use IPub\FormPhone;
@@ -312,7 +308,7 @@ class Phone extends Forms\Controls\TextInput
 	}
 
 	/**
-	 * @param string
+	 * @param string $key
 	 *
 	 * @return Utils\Html
 	 *
@@ -326,7 +322,13 @@ class Phone extends Forms\Controls\TextInput
 		$translator = $this->getTranslator();
 
 		if ($translator instanceof Localization\ITranslator && method_exists($translator, 'getLocale') === TRUE) {
-			$locale = $translator->getLocale();
+			try {
+				$locale = $translator->getLocale();
+
+			} catch (\Exception $ex) {
+				$locale = 'en_US';
+			}
+
 		} else {
 			$locale = 'en_US';
 		}
