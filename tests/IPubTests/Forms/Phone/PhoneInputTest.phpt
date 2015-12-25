@@ -42,6 +42,13 @@ class PhoneInputTest extends Tester\TestCase
 	{
 		return [
 			['+1-734-555-1212', '+17345551212'],
+			['+420234567890', '+420234567890'],
+			['234 567 890', '+420234567890'],
+			['+420.234.567.890', '+420234567890'],
+			['+420-234-567-890', '+420234567890'],
+			['00420234567890', '+420234567890'],
+			['420234567890', '+420234567890'],
+			[420234567890, '+420234567890'],
 		];
 	}
 
@@ -118,7 +125,7 @@ class PhoneInputTest extends Tester\TestCase
 		$control->setValue($input);
 
 		Assert::type('IPub\Phone\Entities\Phone', $control->getValue());
-		Assert::equal($expected, (string) $control->getValue());
+		Assert::equal($expected, $control->getValue()->getRawOutput());
 	}
 
 	/**
