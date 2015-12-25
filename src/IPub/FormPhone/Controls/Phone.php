@@ -35,6 +35,9 @@ use libphonenumber\geocoding;
  * @subpackage     Controls
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
+ *
+ * @property-read string $emptyValue
+ * @property-read Nette\Forms\Rules $rules
  */
 class Phone extends Forms\Controls\TextInput
 {
@@ -378,7 +381,8 @@ class Phone extends Forms\Controls\TextInput
 				'value'	=> $this->number,
 				'type'	=> 'text',
 
-				'data-nette-rules'	=> Nette\Forms\Helpers::exportRules($this->rules) ?: NULL,
+				'data-nette-empty-value'	=> Utils\Strings::trim($this->translate($this->emptyValue)),
+				'data-nette-rules'			=> Nette\Forms\Helpers::exportRules($this->rules) ?: NULL,
 			]);
 
 			if ($this->isDisabled()) {
