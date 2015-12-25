@@ -16,7 +16,7 @@ build:
     tests:
         override:
             -
-                command: 'vendor/bin/tester tests -p php --coverage build/logs/clover.xml --coverage-src src'
+                command: 'vendor/bin/tester tests -p php -c ./tests/php.ini-unix --coverage build/logs/clover.xml --coverage-src src'
                 coverage:
                     file: build/logs/clover.xml
                     format: php-clover
