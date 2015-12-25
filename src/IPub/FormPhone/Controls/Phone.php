@@ -296,10 +296,10 @@ class Phone extends Forms\Controls\TextInput
 	public function loadHttpData()
 	{
 		$country = $this->getHttpData(Forms\Form::DATA_LINE, '[' . static::FIELD_COUNTRY . ']');
-		$this->country = (string) $country === '' | $country === NULL ? NULL : $country;
+		$this->country = (string) $country === '' | $country === NULL ? NULL : (string) $country;
 
 		$number = $this->getHttpData(Forms\Form::DATA_LINE, '[' . static::FIELD_NUMBER . ']');
-		$this->number = (string) $number === '' | $number === NULL ? NULL : $number;
+		$this->number = (string) $number === '' | $number === NULL ? NULL : (string) $number;
 	}
 
 	/**
@@ -325,7 +325,7 @@ class Phone extends Forms\Controls\TextInput
 		// Try to get translator
 		$translator = $this->getTranslator();
 
-		if ($translator instanceof Localization\ITranslator && method_exists($translator, 'getLocale')) {
+		if ($translator instanceof Localization\ITranslator && method_exists($translator, 'getLocale') === TRUE) {
 			$locale = $translator->getLocale();
 		} else {
 			$locale = 'en_US';
