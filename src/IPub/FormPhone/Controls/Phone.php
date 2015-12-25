@@ -370,16 +370,16 @@ class Phone extends Forms\Controls\TextInput
 			return $control;
 
 		} else if ($key === static::FIELD_NUMBER) {
-			$input = parent::getControl();
-
 			$control = Utils\Html::el('input');
 
-			$control
-				->name($name . '[' . static::FIELD_NUMBER . ']')
-				->id($this->getHtmlId() . '-' . static::FIELD_NUMBER)
-				->value($this->number)
-				->type('text')
-				->{'data-nette-rules'}($input->attrs['data-nette-rules']);
+			$control->addAttributes([
+				'name'	=> $name . '[' . static::FIELD_NUMBER . ']',
+				'id'	=> $this->getHtmlId() . '-' . static::FIELD_NUMBER,
+				'value'	=> $this->number,
+				'type'	=> 'text',
+
+				'data-nette-rules'	=> Nette\Forms\Helpers::exportRules($this->rules) ?: NULL,
+			]);
 
 			if ($this->isDisabled()) {
 				$control->disabled(TRUE);
