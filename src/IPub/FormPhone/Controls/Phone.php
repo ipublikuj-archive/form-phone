@@ -373,6 +373,8 @@ class Phone extends Forms\Controls\TextInput
 			return $control;
 
 		} else if ($key === static::FIELD_NUMBER) {
+			$input = parent::getControl();
+
 			$control = Utils\Html::el('input');
 
 			$control->addAttributes([
@@ -382,7 +384,7 @@ class Phone extends Forms\Controls\TextInput
 				'type'	=> 'text',
 
 				'data-nette-empty-value'	=> Utils\Strings::trim($this->translate($this->emptyValue)),
-				'data-nette-rules'			=> Nette\Forms\Helpers::exportRules($this->rules) ?: NULL,
+				'data-nette-rules'			=> $input->{'data-nette-rules'},
 			]);
 
 			if ($this->isDisabled()) {

@@ -240,10 +240,12 @@ class PhoneInputTest extends Tester\TestCase
 
 		// Set some value
 		$control->setValue('+420234567890');
+		$control->setRequired(TRUE);
 
 		$dq = Tester\DomQuery::fromHtml((string) $control->getControlPart(FormPhone\Controls\Phone::FIELD_NUMBER));
 
 		Assert::true($dq->has('input[value=234567890]'));
+		Assert::true($dq->has('input[data-nette-rules]'));
 	}
 
 	public function testHtmlPartCountry()
