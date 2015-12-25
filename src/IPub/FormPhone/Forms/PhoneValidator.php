@@ -61,7 +61,16 @@ class PhoneValidator extends Phone\Forms\PhoneValidator
 		}
 
 		// Get form element value
-		$value = $control->getValue()->getRawOutput();
+		$value = $control->getValue();
+
+		// Value have to be phone entity
+		if ($value instanceof Phone\Entities\Phone) {
+			$number = $value->getRawOutput();
+
+		// Wrong value
+		} else {
+			return FALSE;
+		}
 
 		// Get instance of phone number util
 		$phoneNumberUtil = PhoneNumberUtil::getInstance();
@@ -78,7 +87,7 @@ class PhoneValidator extends Phone\Forms\PhoneValidator
 				// For default countries or country field, the following throws NumberParseException if
 				// not parsed correctly against the supplied country
 				// For automatic detection: tries to discover the country code using from the number itself
-				$phoneProto = $phoneNumberUtil->parse($value, $country);
+				$phoneProto = $phoneNumberUtil->parse($number, $country);
 
 				// For automatic detection, the number should have a country code
 				// Check if type is allowed
