@@ -67,50 +67,46 @@ class PhoneValidator extends Phone\Forms\PhoneValidator
 		if ($value instanceof Phone\Entities\Phone) {
 			$number = $value->getRawOutput();
 
-		// Wrong value
-		} else {
-			return FALSE;
-		}
+			// Get instance of phone number util
+			$phoneNumberUtil = PhoneNumberUtil::getInstance();
 
-		// Get instance of phone number util
-		$phoneNumberUtil = PhoneNumberUtil::getInstance();
+			// Get list of allowed countries from params
+			$allowedCountries = self::determineCountries($control->getAllowedCountries());
 
-		// Get list of allowed countries from params
-		$allowedCountries = self::determineCountries($control->getAllowedCountries());
+			// Get list of allowed phone types
+			$allowedTypes = self::determineTypes($control->getAllowedPhoneTypes());
 
-		// Get list of allowed phone types
-		$allowedTypes = self::determineTypes($control->getAllowedPhoneTypes());
+			// Perform validation
+			foreach ($allowedCountries as $country) {
+				try {
+					// For default countries or country field, the following throws NumberParseException if
+					// not parsed correctly against the supplied country
+					// For automatic detection: tries to discover the country code using from the number itself
+					$phoneProto = $phoneNumberUtil->parse($number, $country);
 
-		// Perform validation
-		foreach ($allowedCountries as $country) {
-			try {
-				// For default countries or country field, the following throws NumberParseException if
-				// not parsed correctly against the supplied country
-				// For automatic detection: tries to discover the country code using from the number itself
-				$phoneProto = $phoneNumberUtil->parse($number, $country);
+					// For automatic detection, the number should have a country code
+					// Check if type is allowed
+					if (
+						$phoneProto->hasCountryCode() &&
+						$allowedTypes === [] ||
+						in_array($phoneNumberUtil->getNumberType($phoneProto), $allowedTypes)
+					) {
+						// Automatic detection:
+						if ($country == 'ZZ') {
+							// Validate if the international phone number is valid for its contained country
+							return $phoneNumberUtil->isValidNumber($phoneProto);
+						}
 
-				// For automatic detection, the number should have a country code
-				// Check if type is allowed
-				if (
-					$phoneProto->hasCountryCode() &&
-					$allowedTypes === [] ||
-					in_array($phoneNumberUtil->getNumberType($phoneProto), $allowedTypes)
-				) {
-					// Automatic detection:
-					if ($country == 'ZZ') {
-						// Validate if the international phone number is valid for its contained country
-						return $phoneNumberUtil->isValidNumber($phoneProto);
+						// Validate number against the specified country. Return only if success
+						// If failure, continue loop to next specified country
+						if ($phoneNumberUtil->isValidNumberForRegion($phoneProto, $country)) {
+							return TRUE;
+						}
 					}
 
-					// Validate number against the specified country. Return only if success
-					// If failure, continue loop to next specified country
-					if ($phoneNumberUtil->isValidNumberForRegion($phoneProto, $country)) {
-						return TRUE;
-					}
+				} catch (libphonenumber\NumberParseException $ex) {
+					// Proceed to default validation error
 				}
-
-			} catch (libphonenumber\NumberParseException $ex) {
-				// Proceed to default validation error
 			}
 		}
 
