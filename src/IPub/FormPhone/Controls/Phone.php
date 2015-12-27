@@ -240,6 +240,8 @@ class Phone extends Forms\Controls\TextInput
 	 * @return $this
 	 *
 	 * @throws Exceptions\InvalidArgumentException
+	 * @throws IPub\Phone\Exceptions\NoValidCountryException
+	 * @throws IPub\Phone\Exceptions\NoValidPhoneException
 	 */
 	public function setValue($value)
 	{
@@ -252,7 +254,7 @@ class Phone extends Forms\Controls\TextInput
 
 		foreach($this->getAllowedCountries() as $country) {
 			if ($this->phoneUtils->isValid($value, $country)) {
-				$phone = $this->phoneUtils->parse($value, $country);
+				$phone = IPub\Phone\Entities\Phone::fromNumber($value, $country);
 
 				$this->country = $phone->getCountry();
 				$this->number = str_replace(' ', '', $phone->getNationalNumber());
@@ -275,7 +277,7 @@ class Phone extends Forms\Controls\TextInput
 
 		try {
 			// Try to parse number & country
-			$number = $this->phoneUtils->parse($this->number, $this->country);
+			$number = IPub\Phone\Entities\Phone::fromNumber($this->number, $this->country);
 
 			return $number === NULL ? NULL : $number;
 
