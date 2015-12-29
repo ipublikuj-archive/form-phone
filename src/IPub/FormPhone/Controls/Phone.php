@@ -360,13 +360,15 @@ class Phone extends Forms\Controls\TextInput
 				]
 			);
 
-			$control
-				->name($name . '[' . static::FIELD_COUNTRY . ']')
-				->id($this->getHtmlId() . '-' . static::FIELD_COUNTRY)
-				->{'data-ipub-forms-phone'}('')
-				->{'data-settings'}(json_encode([
+			$control->addAttributes([
+				'name'	=> $name . '[' . static::FIELD_COUNTRY . ']',
+				'id'	=> $this->getHtmlId() . '-' . static::FIELD_COUNTRY,
+
+				'data-ipub-forms-phone'	=> '',
+				'data-settings'			=> json_encode([
 					'field' => $name . '[' . static::FIELD_NUMBER . ']'
-				]));
+				])
+			]);
 
 			if ($this->isDisabled()) {
 				$control->disabled(TRUE);
