@@ -44,8 +44,8 @@ class Phone extends Forms\Controls\TextInput
 	/**
 	 * Define filed attributes
 	 */
-	const FIELD_COUNTRY = 'country';
-	const FIELD_NUMBER = 'number';
+	const FIELD_COUNTRY	= 'country';
+	const FIELD_NUMBER	= 'number';
 
 	/**
 	 * @var IPub\Phone\Phone
@@ -109,8 +109,7 @@ class Phone extends Forms\Controls\TextInput
 	{
 		$this->allowedCountries = [];
 
-		foreach($countries as $country)
-		{
+		foreach ($countries as $country) {
 			$country = $this->validateCountry($country);
 			$this->allowedCountries[] = strtoupper($country);
 		}
@@ -196,8 +195,7 @@ class Phone extends Forms\Controls\TextInput
 	{
 		$this->allowedTypes = [];
 
-		foreach($types as $type)
-		{
+		foreach ($types as $type) {
 			$type = $this->validateType($type);
 			$this->allowedTypes[] = strtoupper($type);
 		}
@@ -252,7 +250,7 @@ class Phone extends Forms\Controls\TextInput
 			return $this;
 		}
 
-		foreach($this->getAllowedCountries() as $country) {
+		foreach ($this->getAllowedCountries() as $country) {
 			if ($this->phoneUtils->isValid($value, $country)) {
 				$phone = IPub\Phone\Entities\Phone::fromNumber($value, $country);
 
@@ -347,7 +345,7 @@ class Phone extends Forms\Controls\TextInput
 					);
 
 					$result[$row] = Utils\Html::el('option')
-						->setText('+' . $this->phoneUtils->getCountryCodeForCountry($row) . ' ('. $countryName . ')')
+						->setText('+' . $this->phoneUtils->getCountryCodeForCountry($row) . ' (' . $countryName . ')')
 						->addAttributes([
 							'data-mask' => preg_replace('/[0-9]/', '9', $this->phoneUtils->getExampleNationalNumber($row)),
 						])
@@ -361,11 +359,11 @@ class Phone extends Forms\Controls\TextInput
 			);
 
 			$control->addAttributes([
-				'name'	=> $name . '[' . static::FIELD_COUNTRY . ']',
-				'id'	=> $this->getHtmlId() . '-' . static::FIELD_COUNTRY,
+				'name' => $name . '[' . static::FIELD_COUNTRY . ']',
+				'id'   => $this->getHtmlId() . '-' . static::FIELD_COUNTRY,
 
-				'data-ipub-forms-phone'	=> '',
-				'data-settings'			=> json_encode([
+				'data-ipub-forms-phone' => '',
+				'data-settings'         => json_encode([
 					'field' => $name . '[' . static::FIELD_NUMBER . ']'
 				])
 			]);
@@ -382,13 +380,13 @@ class Phone extends Forms\Controls\TextInput
 			$control = Utils\Html::el('input');
 
 			$control->addAttributes([
-				'name'	=> $name . '[' . static::FIELD_NUMBER . ']',
-				'id'	=> $this->getHtmlId() . '-' . static::FIELD_NUMBER,
-				'value'	=> $this->number,
-				'type'	=> 'text',
+				'name'  => $name . '[' . static::FIELD_NUMBER . ']',
+				'id'    => $this->getHtmlId() . '-' . static::FIELD_NUMBER,
+				'value' => $this->number,
+				'type'  => 'text',
 
-				'data-nette-empty-value'	=> Utils\Strings::trim($this->translate($this->emptyValue)),
-				'data-nette-rules'			=> $input->{'data-nette-rules'},
+				'data-nette-empty-value' => Utils\Strings::trim($this->translate($this->emptyValue)),
+				'data-nette-rules'       => $input->{'data-nette-rules'},
 			]);
 
 			if ($this->isDisabled()) {
