@@ -317,7 +317,7 @@ class Phone extends Forms\Controls\TextInput
 	 *
 	 * @throws Exceptions\InvalidArgumentException
 	 */
-	public function getControlPart($key)
+	public function getControlPart($key = NULL)
 	{
 		$name = $this->getHtmlName();
 
