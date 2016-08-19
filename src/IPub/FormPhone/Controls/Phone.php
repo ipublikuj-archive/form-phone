@@ -26,7 +26,6 @@ use IPub\FormPhone\Exceptions;
 use IPub\Phone\Phone as PhoneUtils;
 
 use libphonenumber;
-use libphonenumber\geocoding;
 
 /**
  * Form phone control element
@@ -339,8 +338,8 @@ class Phone extends Forms\Controls\TextInput
 		if ($key === static::FIELD_COUNTRY) {
 			$control = Forms\Helpers::createSelectBox(
 				array_reduce($this->getAllowedCountries(), function (array $result, $row) use ($locale) {
-					$countryName = geocoding\Locale::getDisplayRegion(
-						geocoding\Locale::countryCodeToLocale($row),
+					$countryName = FormPhone\Locale\Locale::getDisplayRegion(
+						FormPhone\Locale\Locale::countryCodeToLocale($row),
 						$locale
 					);
 
