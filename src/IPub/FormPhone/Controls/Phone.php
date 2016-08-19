@@ -307,7 +307,7 @@ class Phone extends Forms\Controls\TextInput
 	public function getControl()
 	{
 		return Utils\Html::el()
-			->add($this->getControlPart(static::FIELD_COUNTRY) . $this->getControlPart(static::FIELD_NUMBER));
+			->addHtml($this->getControlPart(static::FIELD_COUNTRY) . $this->getControlPart(static::FIELD_NUMBER));
 	}
 
 	/**
