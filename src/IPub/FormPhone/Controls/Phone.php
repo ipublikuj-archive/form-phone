@@ -306,7 +306,7 @@ class Phone extends Forms\Controls\TextInput
 	public function getControl()
 	{
 		return Utils\Html::el()
-			->add($this->getControlPart(static::FIELD_COUNTRY) . $this->getControlPart(static::FIELD_NUMBER));
+			->addHtml($this->getControlPart(static::FIELD_COUNTRY) . $this->getControlPart(static::FIELD_NUMBER));
 	}
 
 	/**
@@ -316,7 +316,7 @@ class Phone extends Forms\Controls\TextInput
 	 *
 	 * @throws Exceptions\InvalidArgumentException
 	 */
-	public function getControlPart($key)
+	public function getControlPart($key = NULL)
 	{
 		$name = $this->getHtmlName();
 
