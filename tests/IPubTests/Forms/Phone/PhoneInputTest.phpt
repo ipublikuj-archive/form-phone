@@ -165,10 +165,10 @@ class PhoneInputTest extends Tester\TestCase
 	/**
 	 * @dataProvider dataAllowedCountries
 	 *
-	 * @param string $input
-	 * @param string $expected
+	 * @param array $input
+	 * @param array $expected
 	 */
-	public function testSetAllowedCountries(string $input, string $expected)
+	public function testSetAllowedCountries(array $input, array $expected)
 	{
 		// Create form control
 		$control = new FormPhone\Controls\Phone($this->phone);
@@ -180,10 +180,10 @@ class PhoneInputTest extends Tester\TestCase
 	/**
 	 * @dataProvider dataInvalidAllowedCountries
 	 *
-	 * @param string $input
-	 * @param string $expected
+	 * @param array $input
+	 * @param array $expected
 	 */
-	public function testSetInvalidAllowedCountries(string $input, string $expected)
+	public function testSetInvalidAllowedCountries(array $input, array $expected)
 	{
 		// Create form control
 		$control = new FormPhone\Controls\Phone($this->phone);
