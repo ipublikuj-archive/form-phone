@@ -12,6 +12,8 @@
  * @date           15.12.15
  */
 
+declare(strict_types = 1);
+
 namespace IPub\FormPhone\DI;
 
 use Nette;
@@ -29,7 +31,7 @@ use IPub\Phone;
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-class FormPhoneExtension extends DI\CompilerExtension
+final class FormPhoneExtension extends DI\CompilerExtension
 {
 	/**
 	 * @param Code\ClassType $class
@@ -40,6 +42,7 @@ class FormPhoneExtension extends DI\CompilerExtension
 
 		$builder = $this->getContainerBuilder();
 
+		/** @var Code\Method $initialize */
 		$initialize = $class->methods['initialize'];
 		$initialize->addBody('IPub\FormPhone\Controls\Phone::register($this->getService(?));', [
 			$builder->getByType(Phone\Phone::CLASS_NAME)

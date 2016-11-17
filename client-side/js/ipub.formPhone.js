@@ -43,7 +43,7 @@
         this.$element = $element;
 
         this.name = this.$element.prop('id');
-        this.options = $.extend($.fn.ipubFormsPhone.defaults, options, this.$element.data('settings') || {});
+        this.options = $.extend({}, $.fn.ipubFormsPhone.defaults, options, this.$element.data('settings') || {});
 
         this.isIphone = (window.orientation !== undefined);
         this.isAndroid = navigator.userAgent.toLowerCase().indexOf("android") > -1;

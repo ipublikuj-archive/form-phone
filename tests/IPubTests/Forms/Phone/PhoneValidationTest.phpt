@@ -1,6 +1,6 @@
 <?php
 /**
- * Test: IPub\Forms\PhoneInput
+ * Test: IPub\Forms\PhoneValidation
  * @testCase
  *
  * @copyright      More in license.md
@@ -12,6 +12,8 @@
  *
  * @date           20.12.15
  */
+
+declare(strict_types = 1);
 
 namespace IPubTests\Forms\Phone;
 
@@ -252,7 +254,7 @@ class PhoneValidationTest extends Tester\TestCase
 	 *
 	 * @return FormPhone\Controls\Phone
 	 */
-	private function createControl($data = [])
+	private function createControl(array $data = []) : FormPhone\Controls\Phone
 	{
 		$_SERVER['REQUEST_METHOD'] = 'POST';
 		$_FILES = [];
@@ -271,9 +273,9 @@ class PhoneValidationTest extends Tester\TestCase
 	/**
 	 * @param array $data
 	 *
-	 * @return Forms\Controls\SelectBox
+	 * @return Forms\Controls\TextArea
 	 */
-	private function createInvalidControl($data = [])
+	private function createInvalidControl(array $data = []) : Forms\Controls\TextArea
 	{
 		$_SERVER['REQUEST_METHOD'] = 'POST';
 		$_FILES = [];
@@ -292,12 +294,12 @@ class PhoneValidationTest extends Tester\TestCase
 	/**
 	 * @return Nette\DI\Container
 	 */
-	protected function createContainer()
+	protected function createContainer() : Nette\DI\Container
 	{
 		$config = new Nette\Configurator();
 		$config->setTempDirectory(TEMP_DIR);
 
-		$config->addConfig(__DIR__ . '/files/config.neon', $config::NONE);
+		$config->addConfig(__DIR__ . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . 'config.neon');
 
 		return $config->createContainer();
 	}

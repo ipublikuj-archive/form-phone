@@ -12,6 +12,8 @@
  * @date           19.12.15
  */
 
+declare(strict_types = 1);
+
 namespace IPub\FormPhone\Exceptions;
 
 class NoValidTypeException extends \Exception

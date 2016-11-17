@@ -12,6 +12,8 @@
  * @date           15.12.15
  */
 
+declare(strict_types = 1);
+
 namespace IPub\FormPhone\Controls;
 
 use Nette;
@@ -26,6 +28,7 @@ use IPub\FormPhone\Exceptions;
 use IPub\Phone\Phone as PhoneUtils;
 
 use libphonenumber;
+use Tracy\Debugger;
 
 /**
  * Form phone control element
@@ -43,8 +46,8 @@ class Phone extends Forms\Controls\TextInput
 	/**
 	 * Define filed attributes
 	 */
-	const FIELD_COUNTRY	= 'country';
-	const FIELD_NUMBER	= 'number';
+	const FIELD_COUNTRY = 'country';
+	const FIELD_NUMBER = 'number';
 
 	/**
 	 * @var IPub\Phone\Phone
@@ -131,7 +134,7 @@ class Phone extends Forms\Controls\TextInput
 	 *
 	 * @throws Exceptions\NoValidCountryException
 	 */
-	public function addAllowedCountry($country)
+	public function addAllowedCountry(string $country)
 	{
 		$country = $this->validateCountry($country);
 		$this->allowedCountries[] = strtoupper($country);
@@ -142,7 +145,7 @@ class Phone extends Forms\Controls\TextInput
 		if (strtoupper($country) === 'AUTO') {
 			$this->allowedCountries = ['AUTO'];
 
-		} else if (($key = array_search('AUTO', $this->allowedCountries)) && $key !== FALSE) {
+		} elseif (($key = array_search('AUTO', $this->allowedCountries)) && $key !== FALSE) {
 			unset($this->allowedCountries[$key]);
 		}
 
@@ -152,14 +155,13 @@ class Phone extends Forms\Controls\TextInput
 	/**
 	 * @return array
 	 */
-	public function getAllowedCountries()
+	public function getAllowedCountries() : array
 	{
 		if (in_array('AUTO', $this->allowedCountries, TRUE) || $this->allowedCountries === []) {
 			return $this->phoneUtils->getSupportedCountries();
-
-		} else {
-			return $this->allowedCountries;
 		}
+
+		return $this->allowedCountries;
 	}
 
 	/**
@@ -169,7 +171,7 @@ class Phone extends Forms\Controls\TextInput
 	 *
 	 * @throws Exceptions\NoValidCountryException
 	 */
-	public function setDefaultCountry($country = NULL)
+	public function setDefaultCountry(string $country = NULL)
 	{
 		if ($country === NULL) {
 			$this->defaultCountry = NULL;
@@ -212,7 +214,7 @@ class Phone extends Forms\Controls\TextInput
 	 *
 	 * @throws Exceptions\NoValidTypeException
 	 */
-	public function addAllowedPhoneType($type)
+	public function addAllowedPhoneType(string $type)
 	{
 		$type = $this->validateType($type);
 		$this->allowedTypes[] = strtoupper($type);
@@ -226,7 +228,7 @@ class Phone extends Forms\Controls\TextInput
 	/**
 	 * @return array
 	 */
-	public function getAllowedPhoneTypes()
+	public function getAllowedPhoneTypes() : array
 	{
 		return $this->allowedTypes;
 	}
@@ -260,7 +262,7 @@ class Phone extends Forms\Controls\TextInput
 			}
 		}
 
-		throw new Exceptions\InvalidArgumentException('Provided value is not valid phone number, or is out of list of allowed countries, "' . $value . '" given.');
+		throw new Exceptions\InvalidArgumentException(sprintf('Provided value is not valid phone number, or is out of list of allowed countries, "%s" given.', $value));
 	}
 
 	/**
@@ -293,10 +295,10 @@ class Phone extends Forms\Controls\TextInput
 	 */
 	public function loadHttpData()
 	{
-		$country = $this->getHttpData(Forms\Form::DATA_LINE, '[' . static::FIELD_COUNTRY . ']');
+		$country = $this->getHttpData(Forms\Form::DATA_LINE, '[' . self::FIELD_COUNTRY . ']');
 		$this->country = ($country === '' || $country === NULL) ? NULL : (string) $country;
 
-		$number = $this->getHttpData(Forms\Form::DATA_LINE, '[' . static::FIELD_NUMBER . ']');
+		$number = $this->getHttpData(Forms\Form::DATA_LINE, '[' . self::FIELD_NUMBER . ']');
 		$this->number = ($number === '' || $number === NULL) ? NULL : (string) $number;
 	}
 
@@ -305,97 +307,105 @@ class Phone extends Forms\Controls\TextInput
 	 */
 	public function getControl()
 	{
-		return Utils\Html::el()
-			->add($this->getControlPart(static::FIELD_COUNTRY) . $this->getControlPart(static::FIELD_NUMBER));
+		$el = Utils\Html::el();
+		$el->addHtml($this->getControlPart(self::FIELD_COUNTRY) . $this->getControlPart(self::FIELD_NUMBER));
+
+		return $el;
 	}
 
 	/**
-	 * @param string $key
-	 *
 	 * @return Utils\Html
 	 *
 	 * @throws Exceptions\InvalidArgumentException
 	 */
-	public function getControlPart($key)
+	public function getControlPart()
 	{
+		$args = func_get_args();
+		$key = reset($args);
+
 		$name = $this->getHtmlName();
 
-		// Try to get translator
-		$translator = $this->getTranslator();
+		if ($key === self::FIELD_COUNTRY) {
+			// Try to get translator
+			$translator = $this->getTranslator();
 
-		if ($translator instanceof Localization\ITranslator && method_exists($translator, 'getLocale') === TRUE) {
-			try {
-				$locale = $translator->getLocale();
+			$locale = 'en_US';
 
-			} catch (\Exception $ex) {
-				$locale = 'en_US';
+			if ($translator instanceof Localization\ITranslator && method_exists($translator, 'getLocale') === TRUE) {
+				try {
+					$locale = $translator->getLocale();
+
+				} catch (\Exception $ex) {
+					$locale = 'en_US';
+				}
 			}
 
-		} else {
-			$locale = 'en_US';
-		}
+			$items = array_reduce($this->getAllowedCountries(), function (array $result, $row) use ($locale) {
+				$countryName = FormPhone\Locale\Locale::getDisplayRegion(
+					FormPhone\Locale\Locale::countryCodeToLocale($row),
+					$locale
+				);
 
-		if ($key === static::FIELD_COUNTRY) {
+				$result[$row] = Utils\Html::el('option');
+				$result[$row]->setText('+' . $this->phoneUtils->getCountryCodeForCountry($row) . ' (' . $countryName . ')');
+				$result[$row]->data('mask', preg_replace('/[0-9]/', '9', $this->phoneUtils->getExampleNationalNumber($row)));
+				$result[$row]->addAttributes([
+					'value' => $row,
+				]);
+
+				return $result;
+			}, []);
+
 			$control = Forms\Helpers::createSelectBox(
-				array_reduce($this->getAllowedCountries(), function (array $result, $row) use ($locale) {
-					$countryName = FormPhone\Locale\Locale::getDisplayRegion(
-						FormPhone\Locale\Locale::countryCodeToLocale($row),
-						$locale
-					);
-
-					$result[$row] = Utils\Html::el('option')
-						->setText('+' . $this->phoneUtils->getCountryCodeForCountry($row) . ' (' . $countryName . ')')
-						->addAttributes([
-							'data-mask' => preg_replace('/[0-9]/', '9', $this->phoneUtils->getExampleNationalNumber($row)),
-						])
-						->value($row);
-
-					return $result;
-				}, []),
+				$items,
 				[
 					'selected?' => $this->country === NULL ? $this->defaultCountry : $this->country,
 				]
 			);
 
 			$control->addAttributes([
-				'name' => $name . '[' . static::FIELD_COUNTRY . ']',
-				'id'   => $this->getHtmlId() . '-' . static::FIELD_COUNTRY,
-
-				'data-ipub-forms-phone' => '',
-				'data-settings'         => json_encode([
-					'field' => $name . '[' . static::FIELD_NUMBER . ']'
-				])
+				'name' => $name . '[' . self::FIELD_COUNTRY . ']',
+				'id'   => $this->getHtmlId() . '-' . self::FIELD_COUNTRY,
 			]);
+			$control->data('ipub-forms-phone', '');
+			$control->data('settings', json_encode([
+					'field' => $name . '[' . self::FIELD_NUMBER . ']'
+				])
+			);
 
 			if ($this->isDisabled()) {
-				$control->disabled(TRUE);
+				$control->addAttributes([
+					'disabled' => TRUE,
+				]);
 			}
 
 			return $control;
 
-		} else if ($key === static::FIELD_NUMBER) {
+		} elseif ($key === self::FIELD_NUMBER) {
 			$input = parent::getControl();
 
 			$control = Utils\Html::el('input');
 
 			$control->addAttributes([
-				'name'  => $name . '[' . static::FIELD_NUMBER . ']',
-				'id'    => $this->getHtmlId() . '-' . static::FIELD_NUMBER,
+				'name'  => $name . '[' . self::FIELD_NUMBER . ']',
+				'id'    => $this->getHtmlId() . '-' . self::FIELD_NUMBER,
 				'value' => $this->number,
 				'type'  => 'text',
-
-				'data-nette-empty-value' => Utils\Strings::trim($this->translate($this->emptyValue)),
-				'data-nette-rules'       => $input->{'data-nette-rules'},
 			]);
 
+			$control->data('nette-empty-value', Utils\Strings::trim($this->translate($this->emptyValue)));
+			$control->data('nette-rules', $input->{'data-nette-rules'});
+
 			if ($this->isDisabled()) {
-				$control->disabled(TRUE);
+				$control->addAttributes([
+					'disabled' => TRUE,
+				]);
 			}
 
 			return $control;
 		}
 
-		throw new Exceptions\InvalidArgumentException('Part ' . $key . ' does not exist.');
+		throw new Exceptions\InvalidArgumentException(sprintf('Part "%s" does not exist.', $key));
 	}
 
 	/**
@@ -413,7 +423,7 @@ class Phone extends Forms\Controls\TextInput
 	 *
 	 * @throws Exceptions\NoValidCountryException
 	 */
-	protected function validateCountry($country)
+	protected function validateCountry(string $country) : string
 	{
 		// Country code have to be upper-cased
 		$country = strtoupper($country);
@@ -422,7 +432,7 @@ class Phone extends Forms\Controls\TextInput
 			return $country;
 
 		} else {
-			throw new Exceptions\NoValidCountryException('Provided country code "' . $country . '" is not valid. Provide valid country code or AUTO for automatic detection.');
+			throw new Exceptions\NoValidCountryException(sprintf('Provided country code "%s" is not valid. Provide valid country code or AUTO for automatic detection.', $country));
 		}
 	}
 
@@ -433,7 +443,7 @@ class Phone extends Forms\Controls\TextInput
 	 *
 	 * @throws Exceptions\NoValidTypeException
 	 */
-	protected function validateType($type)
+	protected function validateType(string $type) : string
 	{
 		// Phone type have to be upper-cased
 		$type = strtoupper($type);
@@ -442,7 +452,7 @@ class Phone extends Forms\Controls\TextInput
 			return $type;
 
 		} else {
-			throw new Exceptions\NoValidTypeException('Provided phone type "' . $type . '" is not valid. Provide valid phone type.');
+			throw new Exceptions\NoValidTypeException(sprintf('Provided phone type "%s" is not valid. Provide valid phone type.', $type));
 		}
 	}
 
@@ -450,7 +460,7 @@ class Phone extends Forms\Controls\TextInput
 	 * @param PhoneUtils $phoneUtils
 	 * @param string $method
 	 */
-	public static function register(PhoneUtils $phoneUtils, $method = 'addPhone')
+	public static function register(PhoneUtils $phoneUtils, string $method = 'addPhone')
 	{
 		// Check for multiple registration
 		if (self::$registered) {

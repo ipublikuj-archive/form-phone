@@ -12,6 +12,8 @@
  * @date           12.12.15
  */
 
+declare(strict_types = 1);
+
 namespace IPub\FormPhone\Forms;
 
 use Nette;
@@ -34,7 +36,7 @@ use IPub\Phone;
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-class PhoneValidator extends Phone\Forms\PhoneValidator
+final class PhoneValidator extends Phone\Forms\PhoneValidator
 {
 	/**
 	 * Define class name
@@ -52,12 +54,13 @@ class PhoneValidator extends Phone\Forms\PhoneValidator
 	 *
 	 * @return bool
 	 *
+	 * @throws Exceptions\InvalidArgumentException
 	 * @throws Exceptions\NoValidCountryException
 	 */
-	public static function validatePhone(Forms\IControl $control, $params = [])
+	public static function validatePhone(Forms\IControl $control, array $params = []) : bool
 	{
 		if (!$control instanceof Controls\Phone) {
-			throw new Exceptions\InvalidArgumentException('This validator could be used only on text field. You used it on: "' . get_class($control) . '"');
+			throw new Exceptions\InvalidArgumentException('This validator could be used only on phone field. You used it on: "' . get_class($control) . '"');
 		}
 
 		// Get form element value

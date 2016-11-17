@@ -13,6 +13,8 @@
  * @date           19.12.15
  */
 
+declare(strict_types = 1);
+
 namespace IPubTests\Forms\Phone;
 
 use Nette;
@@ -38,7 +40,7 @@ class PhoneInputTest extends Tester\TestCase
 	/**
 	 * @return array[]|array
 	 */
-	public function dataValidPhoneNumbers()
+	public function dataValidPhoneNumbers() : array
 	{
 		return [
 			['+1-734-555-1212', '+17345551212'],
@@ -55,7 +57,7 @@ class PhoneInputTest extends Tester\TestCase
 	/**
 	 * @return array[]|array
 	 */
-	public function dataInvalidPhoneNumbers()
+	public function dataInvalidPhoneNumbers() : array
 	{
 		return [
 			['foo'],
@@ -68,7 +70,7 @@ class PhoneInputTest extends Tester\TestCase
 	/**
 	 * @return array[]|array
 	 */
-	public function dataEmptyPhoneNumbers()
+	public function dataEmptyPhoneNumbers() : array
 	{
 		return [
 			[NULL, NULL],
@@ -78,7 +80,7 @@ class PhoneInputTest extends Tester\TestCase
 	/**
 	 * @return array[]|array
 	 */
-	public function dataAllowedCountries()
+	public function dataAllowedCountries() : array
 	{
 		return [
 			[['CZ', 'SK'], ['CZ', 'SK']],
@@ -89,7 +91,7 @@ class PhoneInputTest extends Tester\TestCase
 	/**
 	 * @return array[]|array
 	 */
-	public function dataInvalidAllowedCountries()
+	public function dataInvalidAllowedCountries() : array
 	{
 		return [
 			[['CZ', 'SK', 'XY'], ['CZ', 'SK', 'XY']],
@@ -114,10 +116,10 @@ class PhoneInputTest extends Tester\TestCase
 	/**
 	 * @dataProvider dataValidPhoneNumbers
 	 *
-	 * @param string
-	 * @param string
+	 * @param string $input
+	 * @param string $expected
 	 */
-	public function testValidPhoneNumbers($input, $expected)
+	public function testValidPhoneNumbers(string $input, string $expected)
 	{
 		// Create form control
 		$control = new FormPhone\Controls\Phone($this->phone);
@@ -131,15 +133,15 @@ class PhoneInputTest extends Tester\TestCase
 	/**
 	 * @dataProvider dataInvalidPhoneNumbers
 	 *
-	 * @param string
+	 * @param string $input
 	 */
-	public function testInvalidPhoneNumbers($input)
+	public function testInvalidPhoneNumbers(string $input)
 	{
 		// Create form control
 		$control = new FormPhone\Controls\Phone($this->phone);
 		$control->setAllowedCountries(['CZ', 'US']);
 
-		Assert::exception(function() use ($control, $input) {
+		Assert::exception(function () use ($control, $input) {
 			$control->setValue($input);
 		}, 'IPub\FormPhone\Exceptions\InvalidArgumentException');
 	}
@@ -147,10 +149,10 @@ class PhoneInputTest extends Tester\TestCase
 	/**
 	 * @dataProvider dataEmptyPhoneNumbers
 	 *
-	 * @param string
-	 * @param string
+	 * @param string $input
+	 * @param string $expected
 	 */
-	public function testEmptyPhoneNumbers($input, $expected)
+	public function testEmptyPhoneNumbers(string $input, string $expected)
 	{
 		// Create form control
 		$control = new FormPhone\Controls\Phone($this->phone);
@@ -163,10 +165,10 @@ class PhoneInputTest extends Tester\TestCase
 	/**
 	 * @dataProvider dataAllowedCountries
 	 *
-	 * @param string
-	 * @param string
+	 * @param string $input
+	 * @param string $expected
 	 */
-	public function testSetAllowedCountries($input, $expected)
+	public function testSetAllowedCountries(string $input, string $expected)
 	{
 		// Create form control
 		$control = new FormPhone\Controls\Phone($this->phone);
@@ -178,15 +180,15 @@ class PhoneInputTest extends Tester\TestCase
 	/**
 	 * @dataProvider dataInvalidAllowedCountries
 	 *
-	 * @param string
-	 * @param string
+	 * @param string $input
+	 * @param string $expected
 	 */
-	public function testSetInvalidAllowedCountries($input, $expected)
+	public function testSetInvalidAllowedCountries(string $input, string $expected)
 	{
 		// Create form control
 		$control = new FormPhone\Controls\Phone($this->phone);
 
-		Assert::exception(function() use ($control, $input) {
+		Assert::exception(function () use ($control, $input) {
 			$control->setAllowedCountries($input);
 		}, 'IPub\FormPhone\Exceptions\NoValidCountryException');
 	}
@@ -220,11 +222,11 @@ class PhoneInputTest extends Tester\TestCase
 		// Create form control
 		$control = $this->createControl();
 
-		Assert::exception(function() use ($control) {
+		Assert::exception(function () use ($control) {
 			$control->setDefaultCountry('xy');
 		}, 'IPub\FormPhone\Exceptions\NoValidCountryException');
 
-		Assert::exception(function() use ($control) {
+		Assert::exception(function () use ($control) {
 			$control->setDefaultCountry('CZE');
 		}, 'IPub\FormPhone\Exceptions\NoValidCountryException');
 	}
@@ -353,7 +355,7 @@ class PhoneInputTest extends Tester\TestCase
 	 *
 	 * @return FormPhone\Controls\Phone
 	 */
-	private function createControl($data = [])
+	private function createControl(array $data = []) : FormPhone\Controls\Phone
 	{
 		$_SERVER['REQUEST_METHOD'] = 'POST';
 		$_FILES = [];
@@ -372,12 +374,12 @@ class PhoneInputTest extends Tester\TestCase
 	/**
 	 * @return Nette\DI\Container
 	 */
-	protected function createContainer()
+	protected function createContainer() : Nette\DI\Container
 	{
 		$config = new Nette\Configurator();
 		$config->setTempDirectory(TEMP_DIR);
 
-		$config->addConfig(__DIR__ . '/files/config.neon', $config::NONE);
+		$config->addConfig(__DIR__ . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . 'config.neon');
 
 		return $config->createContainer();
 	}
