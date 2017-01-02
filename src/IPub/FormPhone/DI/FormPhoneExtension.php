@@ -4,7 +4,7 @@
  *
  * @copyright      More in license.md
  * @license        http://www.ipublikuj.eu
- * @author         Adam Kadlec <adam.kadlec@fastybird.com>
+ * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  * @package        iPublikuj:FormPhone!
  * @subpackage     DI
  * @since          1.0.0
@@ -29,7 +29,7 @@ use IPub\Phone;
  * @package        iPublikuj:FormPhone!
  * @subpackage     DI
  *
- * @author         Adam Kadlec <adam.kadlec@fastybird.com>
+ * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  */
 final class FormPhoneExtension extends DI\CompilerExtension
 {

@@ -4,7 +4,7 @@
  *
  * @copyright      More in license.md
  * @license        http://www.ipublikuj.eu
- * @author         Adam Kadlec <adam.kadlec@fastybird.com>
+ * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  * @package        iPublikuj:FormPhone!
  * @subpackage     Controls
  * @since          1.0.0
@@ -36,7 +36,7 @@ use Tracy\Debugger;
  * @package        iPublikuj:FormPhone!
  * @subpackage     Controls
  *
- * @author         Adam Kadlec <adam.kadlec@fastybird.com>
+ * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  *
  * @property-read string $emptyValue
  * @property-read Nette\Forms\Rules $rules

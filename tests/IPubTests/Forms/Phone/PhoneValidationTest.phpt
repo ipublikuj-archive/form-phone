@@ -36,7 +36,7 @@ require __DIR__ . '/../../bootstrap.php';
  * @package        iPublikuj:Phone!
  * @subpackage     Tests
  *
- * @author         Adam Kadlec <adam.kadlec@fastybird.com>
+ * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  */
 class PhoneValidationTest extends Tester\TestCase
 {
