@@ -4,7 +4,7 @@
  *
  * @copyright      More in license.md
  * @license        http://www.ipublikuj.eu
- * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
+ * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  * @package        iPublikuj:FormPhone!
  * @subpackage     Forms
  * @since          1.0.0
@@ -34,15 +34,10 @@ use IPub\Phone;
  * @package        iPublikuj:FormPhone!
  * @subpackage     Forms
  *
- * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
+ * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-final class PhoneValidator extends Phone\Forms\PhoneValidator
+class PhoneValidator extends Phone\Forms\PhoneValidator
 {
-	/**
-	 * Define class name
-	 */
-	const CLASS_NAME = __CLASS__;
-
 	/**
 	 * Define validator calling constant
 	 */
@@ -54,13 +49,12 @@ final class PhoneValidator extends Phone\Forms\PhoneValidator
 	 *
 	 * @return bool
 	 *
-	 * @throws Exceptions\InvalidArgumentException
 	 * @throws Exceptions\NoValidCountryException
 	 */
-	public static function validatePhone(Forms\IControl $control, array $params = NULL) : bool
+	public static function validatePhone(Forms\IControl $control, $params = []) : bool
 	{
 		if (!$control instanceof Controls\Phone) {
-			throw new Exceptions\InvalidArgumentException('This validator could be used only on phone field. You used it on: "' . get_class($control) . '"');
+			throw new Exceptions\InvalidArgumentException(sprintf('This validator could be used only on text field. You used it on: "%s"', get_class($control)));
 		}
 
 		// Get form element value

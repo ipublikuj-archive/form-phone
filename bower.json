@@ -1,8 +1,18 @@
 {
 	"name": "ipub/form-phone",
+	"description": "Forms control for adding phone filed for Nette Framework",
+	"keywords": ["nette", "form", "phone", "ipub", "ipublikuj", "framework", "tools"],
 	"main": [
-		"client-side/js/ipub.formPhone.js"
+		"public/js/ipub.formPhone.js"
 	],
+	"authors": [
+		{
+			"name"		: "iPublikuj:cms",
+			"email"		: "info@ipublikuj.eu",
+			"homepage"	: "http://www.ipublikuj.eu/"
+		}
+	],
+	"license": ["GPL-2.0", "GPL-3.0"],
 	"ignore": [
 		"src",
 		"tests",

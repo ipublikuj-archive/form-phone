@@ -28,7 +28,6 @@ use IPub\FormPhone\Exceptions;
 use IPub\Phone\Phone as PhoneUtils;
 
 use libphonenumber;
-use Tracy\Debugger;
 
 /**
  * Form phone control element
@@ -93,7 +92,7 @@ class Phone extends Forms\Controls\TextInput
 	 * @param string|NULL $label
 	 * @param int|NULL $maxLength
 	 */
-	public function __construct(PhoneUtils $phoneUtils, $label = NULL, $maxLength = NULL)
+	public function __construct(PhoneUtils $phoneUtils, string $label = NULL, int $maxLength = NULL)
 	{
 		parent::__construct($label, $maxLength);
 
@@ -423,7 +422,7 @@ class Phone extends Forms\Controls\TextInput
 	 *
 	 * @throws Exceptions\NoValidCountryException
 	 */
-	protected function validateCountry(string $country) : string
+	private function validateCountry(string $country) : string
 	{
 		// Country code have to be upper-cased
 		$country = strtoupper($country);
@@ -443,7 +442,7 @@ class Phone extends Forms\Controls\TextInput
 	 *
 	 * @throws Exceptions\NoValidTypeException
 	 */
-	protected function validateType(string $type) : string
+	private function validateType(string $type) : string
 	{
 		// Phone type have to be upper-cased
 		$type = strtoupper($type);

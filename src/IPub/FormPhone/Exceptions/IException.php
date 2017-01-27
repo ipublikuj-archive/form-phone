@@ -7,7 +7,7 @@
  * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
  * @package        iPublikuj:FormPhone!
  * @subpackage     Exceptions
- * @since          1.0
+ * @since          1.0.0
  *
  * @date           17.12.15
  */

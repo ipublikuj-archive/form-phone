@@ -4,7 +4,7 @@
  *
  * @copyright      More in license.md
  * @license        http://www.ipublikuj.eu
- * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
+ * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  * @package        iPublikuj:FormPhone!
  * @subpackage     DI
  * @since          1.0.0
@@ -29,12 +29,12 @@ use IPub\Phone;
  * @package        iPublikuj:FormPhone!
  * @subpackage     DI
  *
- * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
+ * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
 final class FormPhoneExtension extends DI\CompilerExtension
 {
 	/**
-	 * @param Code\ClassType $class
+	 * {@inheritdoc}
 	 */
 	public function afterCompile(Code\ClassType $class)
 	{
@@ -45,7 +45,7 @@ final class FormPhoneExtension extends DI\CompilerExtension
 		/** @var Code\Method $initialize */
 		$initialize = $class->methods['initialize'];
 		$initialize->addBody('IPub\FormPhone\Controls\Phone::register($this->getService(?));', [
-			$builder->getByType(Phone\Phone::CLASS_NAME)
+			$builder->getByType(Phone\Phone::class)
 		]);
 	}
 }

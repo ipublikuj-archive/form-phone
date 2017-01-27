@@ -18,6 +18,14 @@ namespace IPub\FormPhone\Locale;
 
 use Giggsey;
 
+/**
+ * Locale helper
+ *
+ * @package        iPublikuj:FormPhone!
+ * @subpackage     Locale
+ *
+ * @author         Adam Kadlec <adam.kadlec@fastybird.com>
+ */
 class Locale extends Giggsey\Locale\Locale
 {
 	/**

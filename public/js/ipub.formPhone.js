@@ -3,7 +3,7 @@
  *
  * @copyright      More in license.md
  * @license        http://www.ipublikuj.eu
- * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
+ * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  * @package        iPublikuj:FormPhone!
  * @subpackage     java-script
  * @since          1.0.0
@@ -14,7 +14,7 @@
 /**
  * Client-side script for iPublikuj:FormPhone!
  *
- * @author        Adam Kadlec <adam.kadlec@ipublikuj.eu>
+ * @author        Adam Kadlec <adam.kadlec@fastybird.com>
  * @package       iPublikuj:FormPhone!
  * @version       1.0.0
  *
@@ -43,7 +43,7 @@
         this.$element = $element;
 
         this.name = this.$element.prop('id');
-        this.options = $.extend({}, $.fn.ipubFormsPhone.defaults, options, this.$element.data('settings') || {});
+        this.options = $.extend($.fn.ipubFormsPhone.defaults, options, this.$element.data('settings') || {});
 
         this.isIphone = (window.orientation !== undefined);
         this.isAndroid = navigator.userAgent.toLowerCase().indexOf("android") > -1;

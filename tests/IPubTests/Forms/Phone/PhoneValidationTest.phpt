@@ -1,6 +1,6 @@
 <?php
 /**
- * Test: IPub\Forms\PhoneValidation
+ * Test: IPub\Forms\PhoneInput
  * @testCase
  *
  * @copyright      More in license.md
@@ -28,7 +28,7 @@ use IPub\FormPhone;
 
 use IPub\Phone;
 
-require __DIR__ . '/../../bootstrap.php';
+require __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
 /**
  * Phone number form validation tests
@@ -36,7 +36,7 @@ require __DIR__ . '/../../bootstrap.php';
  * @package        iPublikuj:Phone!
  * @subpackage     Tests
  *
- * @author         Adam Kadlec <adam.kadlec@ipublikuj.eu>
+ * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
 class PhoneValidationTest extends Tester\TestCase
 {
@@ -46,7 +46,7 @@ class PhoneValidationTest extends Tester\TestCase
 	private $phone;
 
 	/**
-	 * Set up
+	 * {@inheritdoc}
 	 */
 	public function setUp()
 	{
@@ -55,7 +55,7 @@ class PhoneValidationTest extends Tester\TestCase
 		$dic = $this->createContainer();
 
 		// Get phone helper from container
-		$this->phone = $dic->getByType(Phone\Phone::CLASS_NAME);
+		$this->phone = $dic->getByType(Phone\Phone::class);
 	}
 
 	public function testValidatePhoneWithDefaultCountryWithoutType()
@@ -299,7 +299,7 @@ class PhoneValidationTest extends Tester\TestCase
 		$config = new Nette\Configurator();
 		$config->setTempDirectory(TEMP_DIR);
 
-		$config->addConfig(__DIR__ . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . 'config.neon');
+		$config->addConfig(__DIR__ . DS . 'files' . DS . 'config.neon');
 
 		return $config->createContainer();
 	}

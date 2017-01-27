@@ -28,8 +28,16 @@ use IPub\FormPhone;
 
 use IPub\Phone;
 
-require __DIR__ . '/../../bootstrap.php';
+require __DIR__ . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
+/**
+ * Phone number form input tests
+ *
+ * @package        iPublikuj:Phone!
+ * @subpackage     Tests
+ *
+ * @author         Adam Kadlec <adam.kadlec@fastybird.com>
+ */
 class PhoneInputTest extends Tester\TestCase
 {
 	/**
@@ -101,7 +109,7 @@ class PhoneInputTest extends Tester\TestCase
 	}
 
 	/**
-	 * Set up
+	 * {@inheritdoc}
 	 */
 	public function setUp()
 	{
@@ -110,16 +118,16 @@ class PhoneInputTest extends Tester\TestCase
 		$dic = $this->createContainer();
 
 		// Get phone helper from container
-		$this->phone = $dic->getByType(Phone\Phone::CLASS_NAME);
+		$this->phone = $dic->getByType(Phone\Phone::class);
 	}
 
 	/**
 	 * @dataProvider dataValidPhoneNumbers
 	 *
-	 * @param string $input
-	 * @param string $expected
+	 * @param string
+	 * @param string
 	 */
-	public function testValidPhoneNumbers(string $input, string $expected)
+	public function testValidPhoneNumbers($input, $expected)
 	{
 		// Create form control
 		$control = new FormPhone\Controls\Phone($this->phone);
@@ -133,15 +141,15 @@ class PhoneInputTest extends Tester\TestCase
 	/**
 	 * @dataProvider dataInvalidPhoneNumbers
 	 *
-	 * @param string $input
+	 * @param string
 	 */
-	public function testInvalidPhoneNumbers(string $input)
+	public function testInvalidPhoneNumbers($input)
 	{
 		// Create form control
 		$control = new FormPhone\Controls\Phone($this->phone);
 		$control->setAllowedCountries(['CZ', 'US']);
 
-		Assert::exception(function () use ($control, $input) {
+		Assert::exception(function() use ($control, $input) {
 			$control->setValue($input);
 		}, 'IPub\FormPhone\Exceptions\InvalidArgumentException');
 	}
@@ -149,10 +157,10 @@ class PhoneInputTest extends Tester\TestCase
 	/**
 	 * @dataProvider dataEmptyPhoneNumbers
 	 *
-	 * @param string $input
-	 * @param string $expected
+	 * @param string
+	 * @param string
 	 */
-	public function testEmptyPhoneNumbers(string $input, string $expected)
+	public function testEmptyPhoneNumbers($input, $expected)
 	{
 		// Create form control
 		$control = new FormPhone\Controls\Phone($this->phone);
@@ -165,10 +173,10 @@ class PhoneInputTest extends Tester\TestCase
 	/**
 	 * @dataProvider dataAllowedCountries
 	 *
-	 * @param array $input
-	 * @param array $expected
+	 * @param string
+	 * @param string
 	 */
-	public function testSetAllowedCountries(array $input, array $expected)
+	public function testSetAllowedCountries($input, $expected)
 	{
 		// Create form control
 		$control = new FormPhone\Controls\Phone($this->phone);
@@ -180,19 +188,18 @@ class PhoneInputTest extends Tester\TestCase
 	/**
 	 * @dataProvider dataInvalidAllowedCountries
 	 *
-	 * @param array $input
-	 * @param array $expected
+	 * @param string
+	 * @param string
 	 */
-	public function testSetInvalidAllowedCountries(array $input, array $expected)
+	public function testSetInvalidAllowedCountries($input, $expected)
 	{
 		// Create form control
 		$control = new FormPhone\Controls\Phone($this->phone);
 
-		Assert::exception(function () use ($control, $input) {
+		Assert::exception(function() use ($control, $input) {
 			$control->setAllowedCountries($input);
 		}, 'IPub\FormPhone\Exceptions\NoValidCountryException');
 	}
-
 
 	public function testDefaultCountry()
 	{
@@ -222,11 +229,11 @@ class PhoneInputTest extends Tester\TestCase
 		// Create form control
 		$control = $this->createControl();
 
-		Assert::exception(function () use ($control) {
+		Assert::exception(function() use ($control) {
 			$control->setDefaultCountry('xy');
 		}, 'IPub\FormPhone\Exceptions\NoValidCountryException');
 
-		Assert::exception(function () use ($control) {
+		Assert::exception(function() use ($control) {
 			$control->setDefaultCountry('CZE');
 		}, 'IPub\FormPhone\Exceptions\NoValidCountryException');
 	}
@@ -379,7 +386,7 @@ class PhoneInputTest extends Tester\TestCase
 		$config = new Nette\Configurator();
 		$config->setTempDirectory(TEMP_DIR);
 
-		$config->addConfig(__DIR__ . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . 'config.neon');
+		$config->addConfig(__DIR__ . DS . 'files' . DS . 'config.neon');
 
 		return $config->createContainer();
 	}
