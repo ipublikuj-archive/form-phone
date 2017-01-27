@@ -15,7 +15,7 @@
 
 declare(strict_types = 1);
 
-namespace IPubTests\Forms\Phone;
+namespace IPubTests\FormPhone;
 
 use Nette;
 use Nette\Forms;

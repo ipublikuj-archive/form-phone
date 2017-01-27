@@ -1,5 +1,5 @@
 {
-	"name": "ipub/form-phone",
+	"name": "ipub-form-phone",
 	"description": "Forms control for adding phone filed for Nette Framework",
 	"keywords": ["nette", "form", "phone", "ipub", "ipublikuj", "framework", "tools"],
 	"main": [
