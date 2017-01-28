@@ -5,6 +5,10 @@
 	"main": [
 		"public/js/ipub.formPhone.js"
 	],
+	"dependencies": {
+		"jquery": "~2.1.0",
+		"ipub-phone": "^1.2.0"
+	},
 	"authors": [
 		{
 			"name"		: "iPublikuj:cms",
