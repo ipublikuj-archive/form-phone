@@ -250,14 +250,24 @@ class Phone extends Forms\Controls\TextInput
 			return $this;
 		}
 
-		foreach ($this->getAllowedCountries() as $country) {
-			if ($this->phoneUtils->isValid($value, $country)) {
-				$phone = IPub\Phone\Entities\Phone::fromNumber($value, $country);
-
-				$this->country = $phone->getCountry();
-				$this->number = str_replace(' ', '', $phone->getNationalNumber());
+		if ($value instanceof IPub\Phone\Entities\Phone) {
+			if (in_array($value->getCountry(), $this->getAllowedCountries(), TRUE)) {
+				$this->country = $value->getCountry();
+				$this->number = str_replace(' ', '', $value->getNationalNumber());
 
 				return $this;
+			}
+
+		} else {
+			foreach ($this->getAllowedCountries() as $country) {
+				if ($this->phoneUtils->isValid($value, $country)) {
+					$phone = IPub\Phone\Entities\Phone::fromNumber($value, $country);
+
+					$this->country = $phone->getCountry();
+					$this->number = str_replace(' ', '', $phone->getNationalNumber());
+
+					return $this;
+				}
 			}
 		}
 
@@ -265,7 +275,26 @@ class Phone extends Forms\Controls\TextInput
 	}
 
 	/**
-	 * @return IPub\Phone\Entities\Phone|NULL
+	 * @param string $key
+	 *
+	 * @return string
+	 *
+	 * @throws Exceptions\InvalidArgumentException
+	 */
+	public function getValuePart(string $key) : string
+	{
+		if ($key === self::FIELD_COUNTRY) {
+			return $this->country;
+
+		} elseif ($key === self::FIELD_NUMBER) {
+			return $this->number;
+		}
+
+		throw new Exceptions\InvalidArgumentException('Invalid field key provided.');
+	}
+
+	/**
+	 * @return IPub\Phone\Entities\Phone|NULL|FALSE
 	 */
 	public function getValue()
 	{
@@ -275,15 +304,13 @@ class Phone extends Forms\Controls\TextInput
 
 		try {
 			// Try to parse number & country
-			$number = IPub\Phone\Entities\Phone::fromNumber($this->number, $this->country);
-
-			return $number === NULL ? NULL : $number;
+			return IPub\Phone\Entities\Phone::fromNumber($this->number, $this->country);
 
 		} catch (IPub\Phone\Exceptions\NoValidCountryException $ex) {
-			return NULL;
+			return FALSE;
 
 		} catch (IPub\Phone\Exceptions\NoValidPhoneException $ex) {
-			return NULL;
+			return FALSE;
 		}
 	}
 
@@ -381,6 +408,8 @@ class Phone extends Forms\Controls\TextInput
 			return $control;
 
 		} elseif ($key === self::FIELD_NUMBER) {
+			$prototype = $this->getControlPrototype();
+
 			$input = parent::getControl();
 
 			$control = Utils\Html::el('input');
@@ -390,6 +419,7 @@ class Phone extends Forms\Controls\TextInput
 				'id'    => $this->getHtmlId() . '-' . self::FIELD_NUMBER,
 				'value' => $this->number,
 				'type'  => 'text',
+				'class' => $prototype->getAttribute('class'),
 			]);
 
 			$control->data('nette-empty-value', Utils\Strings::trim($this->translate($this->emptyValue)));

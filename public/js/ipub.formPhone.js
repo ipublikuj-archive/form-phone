@@ -495,6 +495,12 @@
     // Autoload plugin
     IPub.Forms.Phone.load();
 
+    // Autoload for ajax calls
+    $(document).ajaxSuccess(function() {
+        // Autoload plugin
+        IPub.Forms.Phone.load();
+    });
+
     // Assign plugin data to DOM
     window.IPub = IPub;
 

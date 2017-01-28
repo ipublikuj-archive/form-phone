@@ -27,6 +27,7 @@ use IPub\FormPhone\Controls;
 use IPub\FormPhone\Exceptions;
 
 use IPub\Phone;
+use Tracy\Debugger;
 
 /**
  * Phone number control form field validator
@@ -57,8 +58,20 @@ class PhoneValidator extends Phone\Forms\PhoneValidator
 			throw new Exceptions\InvalidArgumentException(sprintf('This validator could be used only on text field. You used it on: "%s"', get_class($control)));
 		}
 
-		// Get form element value
-		$value = $control->getValue();
+		if ($control->getValuePart(Controls\Phone::FIELD_NUMBER) === NULL || $control->getValuePart(Controls\Phone::FIELD_COUNTRY) === NULL) {
+			return TRUE;
+		}
+
+		try {
+			// Create phone entity
+			$value = Phone\Entities\Phone::fromNumber($control->getValuePart(Controls\Phone::FIELD_NUMBER), $control->getValuePart(Controls\Phone::FIELD_COUNTRY));
+
+		} catch (Phone\Exceptions\NoValidCountryException $ex) {
+			return FALSE;
+
+		} catch (Phone\Exceptions\NoValidPhoneException $ex) {
+			return FALSE;
+		}
 
 		// Value have to be phone entity
 		if ($value instanceof Phone\Entities\Phone) {
