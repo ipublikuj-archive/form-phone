@@ -37,6 +37,7 @@ note: You have to upload static files from **client-site** folder to your projec
 ## Documentation
 
 Learn how to extend your forms with phone field in [documentation](https://github.com/iPublikuj/form-phone/blob/master/docs/en/index.md).
+For JavaScript part of this extension please checkout [JS documentation](https://github.com/iPublikuj/form-phone/blob/master/public/readme.md)
 
 ***
 Homepage [http://www.ipublikuj.eu](http://www.ipublikuj.eu) and repository [http://github.com/iPublikuj/form-phone](http://github.com/iPublikuj/form-phone).
