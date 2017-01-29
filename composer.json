@@ -22,7 +22,7 @@
 	"require": {
 		"php"	: ">=7.0.0",
 
-		"ipub/phone"	: "~1.1.2",
+		"ipub/phone"	: "~1.2",
 
 		"nette/application"	: "~2.3@dev",
 		"nette/di"			: "~2.3@dev",
