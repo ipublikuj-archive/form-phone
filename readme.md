@@ -6,7 +6,6 @@
 [![Latest Stable Version](https://img.shields.io/packagist/v/ipub/form-phone.svg?style=flat-square)](https://packagist.org/packages/ipub/form-phone)
 [![Composer Downloads](https://img.shields.io/packagist/dt/ipub/form-phone.svg?style=flat-square)](https://packagist.org/packages/ipub/form-phone)
 [![License](https://img.shields.io/packagist/l/ipub/form-phone.svg?style=flat-square)](https://packagist.org/packages/ipub/form-phone)
-[![Dependency Status](https://img.shields.io/versioneye/d/user/projects/5675f5361079970030000906.svg?style=flat-square)](https://www.versioneye.com/user/projects/5675f5361079970030000906)
 
 Forms control for adding phone number filed for [Nette Framework](http://nette.org/)
 

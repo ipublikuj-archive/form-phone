@@ -1,22 +1,22 @@
 /**
  * ipub.formPhone.js
  *
- * @copyright      More in license.md
- * @license        http://www.ipublikuj.eu
- * @author         Adam Kadlec <adam.kadlec@fastybird.com>
- * @package        iPublikuj:FormPhone!
- * @subpackage     java-script
- * @since          1.0.0
+ * @copyright   More in license.md
+ * @license     http://www.ipublikuj.eu
+ * @author      Adam Kadlec <adam.kadlec@fastybird.com>
+ * @package     iPublikuj:FormPhone!
+ * @subpackage  java-script
+ * @since       1.0.0
  *
- * @date           19.12.15
+ * @date        19.12.15
  */
 
 /**
  * Client-side script for iPublikuj:FormPhone!
  *
- * @author        Adam Kadlec <adam.kadlec@fastybird.com>
- * @package       iPublikuj:FormPhone!
- * @version       1.0.0
+ * @author      Adam Kadlec <adam.kadlec@fastybird.com>
+ * @package     iPublikuj:FormPhone!
+ * @version     1.0.0
  *
  * @param {jQuery} $ (version > 1.7)
  * @param {Window} window
@@ -38,8 +38,7 @@
      * @param {jQuery} $element
      * @param {Object} options
      */
-    IPub.Forms.Phone = function ($element, options)
-    {
+    IPub.Forms.Phone = function ($element, options) {
         this.$element = $element;
 
         this.name = this.$element.prop('id');
@@ -51,376 +50,359 @@
     };
 
     IPub.Forms.Phone.prototype =
-    {
-        // Initial function.
-        init: function ()
         {
-            if (this.isAndroid) return; // No support because caret positioning doesn't work on Android
+            // Initial function.
+            init: function () {
+                if (this.isAndroid) return; // No support because caret positioning doesn't work on Android
 
-            var that = this;
+                var that = this;
 
-            this.mask = String(this.$element.find(":selected").data('mask'));
-            this.$phoneField = $(document.getElementsByName(this.options.field)[0]);
+                this.mask = String(this.$element.find(":selected").data('mask'));
+                this.$phoneField = $(document.getElementsByName(this.options.field)[0]);
 
-            this.$element.bind('change.ipub.forms.phone', function () {
-                that.mask = String(that.$element.find(":selected").data('mask'));
+                this.$element.bind('change.ipub.forms.phone', function () {
+                    that.mask = String(that.$element.find(":selected").data('mask'));
 
-                that.attach();
+                    that.attach();
+
+                    // Perform initial check for existing values
+                    that.checkVal();
+                });
+
+                this.attach();
+                this.listen();
 
                 // Perform initial check for existing values
-                that.checkVal();
-            });
+                this.checkVal();
+            },
 
-            this.attach();
-            this.listen();
+            attach: function () {
+                var defs = this.options.definitions;
+                var len = this.mask.length;
 
-            // Perform initial check for existing values
-            this.checkVal();
-        },
+                this.tests = new Array;
+                this.partialPosition = this.mask.length;
+                this.firstNonMaskPos = null;
 
-        attach: function ()
-        {
-            var defs = this.options.definitions;
-            var len = this.mask.length;
+                $.each(this.mask.split(''), $.proxy(function (i, c) {
+                    if (c == '?') {
+                        len--;
+                        this.partialPosition = i;
 
-            this.tests = new Array;
-            this.partialPosition = this.mask.length;
-            this.firstNonMaskPos = null;
+                    } else if (defs[c]) {
+                        this.tests.push(new RegExp(defs[c]));
 
-            $.each(this.mask.split(''), $.proxy(function (i, c) {
-                if (c == '?') {
-                    len--;
-                    this.partialPosition = i;
+                        if (this.firstNonMaskPos === null) {
+                            this.firstNonMaskPos = this.tests.length - 1;
+                        }
 
-                } else if (defs[c]) {
-                    this.tests.push(new RegExp(defs[c]));
-
-                    if (this.firstNonMaskPos === null) {
-                        this.firstNonMaskPos = this.tests.length - 1;
+                    } else {
+                        this.tests.push(null);
                     }
 
-                } else {
-                    this.tests.push(null);
+                }, this));
+
+                this.buffer = $.map(this.mask.split(''), $.proxy(function (c, i) {
+                    if (c != '?') return defs[c] ? this.options.placeholder : c;
+                }, this));
+
+                this.focusText = this.$phoneField.val();
+
+                this.$phoneField.data('rawMaskFn', $.proxy(function () {
+                    return $.map(this.buffer, function (c, i) {
+                        return this.tests[i] && c != this.options.placeholder ? c : null;
+                    }).join('');
+                }, this))
+            },
+
+            listen: function () {
+                if (this.$phoneField.attr('readonly'))
+                    return;
+
+                var pasteEventName = (this.isIE ? 'paste' : 'input') + '.ipub.forms.phone';
+
+                this.$phoneField
+                    .off('unmask.ipub.forms.phone')
+                    .on('unmask.ipub.forms.phone', $.proxy(this.unmask, this))
+
+                    .off('focus.ipub.forms.phone')
+                    .on('focus.ipub.forms.phone', $.proxy(this.focusEvent, this))
+                    .off('blur.ipub.forms.phone')
+                    .on('blur.ipub.forms.phone', $.proxy(this.blurEvent, this))
+
+                    .off('keydown.ipub.forms.phone')
+                    .on('keydown.ipub.forms.phone', $.proxy(this.keydownEvent, this))
+                    .off('keypress.ipub.forms.phone')
+                    .on('keypress.ipub.forms.phone', $.proxy(this.keypressEvent, this))
+
+                    .off(pasteEventName)
+                    .on(pasteEventName, $.proxy(this.pasteEvent, this));
+            },
+
+            checkVal: function (allow) {
+                var len = this.mask.length;
+
+                // Try to place characters where they belong
+                var test = this.$phoneField.val();
+                var lastMatch = -1;
+
+                for (var i = 0, pos = 0; i < len; i++) {
+                    if (this.tests[i]) {
+                        this.buffer[i] = this.options.placeholder;
+
+                        while (pos++ < test.length) {
+                            var c = test.charAt(pos - 1);
+
+                            if (this.tests[i].test(c)) {
+                                this.buffer[i] = c;
+                                lastMatch = i;
+
+                                break
+                            }
+                        }
+
+                        if (pos > test.length) {
+                            break
+                        }
+
+                    } else if (this.buffer[i] == test.charAt(pos) && i != this.partialPosition) {
+                        pos++;
+                        lastMatch = i;
+                    }
                 }
 
-            }, this));
+                if (!allow && lastMatch + 1 < this.partialPosition) {
+                    this.$phoneField.val('');
+                    this.clearBuffer(0, len);
 
-            this.buffer = $.map(this.mask.split(''), $.proxy(function (c, i) {
-                if (c != '?') return defs[c] ? this.options.placeholder : c;
-            }, this));
+                } else if (allow || lastMatch + 1 >= this.partialPosition) {
+                    this.writeBuffer();
 
-            this.focusText = this.$phoneField.val();
+                    if (!allow) {
+                        this.$phoneField.val(this.$phoneField.val().substring(0, lastMatch + 1));
+                    }
+                }
 
-            this.$phoneField.data('rawMaskFn', $.proxy(function () {
-                return $.map(this.buffer, function (c, i) {
-                    return this.tests[i] && c != this.options.placeholder ? c : null;
-                }).join('');
-            }, this))
-        },
+                return (this.partialPosition ? i : this.firstNonMaskPos)
+            },
 
-        listen: function ()
-        {
-            if (this.$phoneField.attr('readonly'))
-                return;
+            // Helper Function for Caret positioning
+            caret: function (begin, end) {
+                if (this.$phoneField.length === 0) return;
 
-            var pasteEventName = (this.isIE ? 'paste' : 'input') + '.ipub.forms.phone';
+                if (typeof begin == 'number') {
+                    end = (typeof end == 'number') ? end : begin;
 
-            this.$phoneField
-                .off('unmask.ipub.forms.phone')
-                .on('unmask.ipub.forms.phone', $.proxy(this.unmask, this))
+                    return this.$phoneField.each(function () {
+                        if (this.setSelectionRange) {
+                            this.setSelectionRange(begin, end);
 
-                .off('focus.ipub.forms.phone')
-                .on('focus.ipub.forms.phone', $.proxy(this.focusEvent, this))
-                .off('blur.ipub.forms.phone')
-                .on('blur.ipub.forms.phone', $.proxy(this.blurEvent, this))
+                        } else if (this.createTextRange) {
+                            var range = this.createTextRange();
+                            range.collapse(true);
+                            range.moveEnd('character', end);
+                            range.moveStart('character', begin);
+                            range.select();
+                        }
+                    });
 
-                .off('keydown.ipub.forms.phone')
-                .on('keydown.ipub.forms.phone', $.proxy(this.keydownEvent, this))
-                .off('keypress.ipub.forms.phone')
-                .on('keypress.ipub.forms.phone', $.proxy(this.keypressEvent, this))
+                } else {
+                    if (this.$phoneField[0].setSelectionRange) {
+                        begin = this.$phoneField[0].selectionStart;
+                        end = this.$phoneField[0].selectionEnd;
 
-                .off(pasteEventName)
-                .on(pasteEventName, $.proxy(this.pasteEvent, this));
-        },
+                    } else if (document.selection && document.selection.createRange) {
+                        var range = document.selection.createRange();
 
-        checkVal: function (allow)
-        {
-            var len = this.mask.length;
+                        begin = 0 - range.duplicate().moveStart('character', -100000);
+                        end = begin + range.text.length;
+                    }
 
-            // Try to place characters where they belong
-            var test = this.$phoneField.val();
-            var lastMatch = -1;
+                    return {
+                        begin: begin,
+                        end: end
+                    }
+                }
+            },
 
-            for (var i = 0, pos = 0; i < len; i++) {
-                if (this.tests[i]) {
-                    this.buffer[i] = this.options.placeholder;
+            unmask: function () {
+                this.$phoneField
+                    .unbind('.ipub.forms.phone')
+                    .removeData('ipub.forms.phone');
+            },
 
-                    while (pos++ < test.length) {
-                        var c = test.charAt(pos - 1);
+            focusEvent: function () {
+                this.focusText = this.$phoneField.val();
+                var len = this.mask.length;
+                var pos = this.checkVal();
 
-                        if (this.tests[i].test(c)) {
-                            this.buffer[i] = c;
-                            lastMatch = i;
+                this.writeBuffer()
 
-                            break
+                var that = this
+
+                var moveCaret = function () {
+                    if (pos == len) {
+                        that.caret(0, pos);
+
+                    } else {
+                        that.caret(pos)
+                    }
+                }
+
+                moveCaret()
+                setTimeout(moveCaret, 50)
+            },
+
+            blurEvent: function () {
+                this.checkVal();
+
+                if (this.$phoneField.val() !== this.focusText) {
+                    this.$phoneField.trigger('change');
+                    this.$phoneField.trigger('input');
+                }
+            },
+
+            keydownEvent: function (e) {
+                var k = e.which;
+
+                // backspace, delete, and escape get special treatment
+                if (k == 8 || k == 46 || (this.isIphone && k == 127)) {
+                    var pos = this.caret(),
+                        begin = pos.begin,
+                        end = pos.end;
+
+                    if (end - begin === 0) {
+                        begin = k != 46 ? this.seekPrev(begin) : (end = this.seekNext(begin - 1));
+                        end = k == 46 ? this.seekNext(end) : end;
+                    }
+
+                    this.clearBuffer(begin, end);
+                    this.shiftL(begin, end - 1);
+
+                    return false;
+
+                    // escape
+                } else if (k == 27) {
+                    this.$phoneField.val(this.focusText);
+                    this.caret(0, this.checkVal());
+
+                    return false;
+                }
+            },
+
+            keypressEvent: function (e) {
+                var len = this.mask.length;
+
+                var k = e.which,
+                    pos = this.caret();
+
+                // Ignore
+                if (e.ctrlKey || e.altKey || e.metaKey || k < 32) {
+                    return true;
+
+                } else if (k) {
+                    if (pos.end - pos.begin !== 0) {
+                        this.clearBuffer(pos.begin, pos.end);
+                        this.shiftL(pos.begin, pos.end - 1);
+                    }
+
+                    var p = this.seekNext(pos.begin - 1);
+
+                    if (p < len) {
+                        var c = String.fromCharCode(k);
+
+                        if (this.tests[p].test(c)) {
+                            this.shiftR(p);
+                            this.buffer[p] = c;
+                            this.writeBuffer();
+                            var next = this.seekNext(p);
+                            this.caret(next);
                         }
                     }
 
-                    if (pos > test.length) {
-                        break
-                    }
-
-                } else if (this.buffer[i] == test.charAt(pos) && i != this.partialPosition) {
-                    pos++;
-                    lastMatch = i;
+                    return false;
                 }
-            }
+            },
 
-            if (!allow && lastMatch + 1 < this.partialPosition) {
-                this.$phoneField.val('');
-                this.clearBuffer(0, len);
+            pasteEvent: function () {
+                var that = this
 
-            } else if (allow || lastMatch + 1 >= this.partialPosition) {
+                setTimeout(function () {
+                    that.caret(that.checkVal(true))
+                }, 0);
+            },
+
+            clearBuffer: function (start, end) {
+                var len = this.mask.length;
+
+                for (var i = start; i < end && i < len; i++) {
+                    if (this.tests[i]) {
+                        this.buffer[i] = this.options.placeholder
+                    }
+                }
+            },
+
+            writeBuffer: function () {
+                return this.$phoneField.val(this.buffer.join('')).val()
+            },
+
+            seekNext: function (pos) {
+                var len = this.mask.length;
+
+                while (++pos <= len && !this.tests[pos]);
+
+                return pos;
+            },
+
+            seekPrev: function (pos) {
+                while (--pos >= 0 && !this.tests[pos]);
+
+                return pos;
+            },
+
+            shiftL: function (begin, end) {
+                var len = this.mask.length;
+
+                if (begin < 0) return;
+
+                for (var i = begin, j = this.seekNext(end); i < len; i++) {
+                    if (this.tests[i]) {
+                        if (j < len && this.tests[i].test(this.buffer[j])) {
+                            this.buffer[i] = this.buffer[j];
+                            this.buffer[j] = this.options.placeholder;
+
+                        } else {
+                            break;
+                        }
+
+                        j = this.seekNext(j);
+                    }
+                }
+
                 this.writeBuffer();
+                this.caret(Math.max(this.firstNonMaskPos, begin));
+            },
 
-                if (!allow) {
-                    this.$phoneField.val(this.$phoneField.val().substring(0, lastMatch + 1));
-                }
-            }
+            shiftR: function (pos) {
+                var len = this.mask.length;
 
-            return (this.partialPosition ? i : this.firstNonMaskPos)
-        },
+                for (var i = pos, c = this.options.placeholder; i < len; i++) {
+                    if (this.tests[i]) {
+                        var j = this.seekNext(i);
+                        var t = this.buffer[i];
 
-        // Helper Function for Caret positioning
-        caret: function (begin, end)
-        {
-            if (this.$phoneField.length === 0) return;
+                        this.buffer[i] = c;
 
-            if (typeof begin == 'number') {
-                end = (typeof end == 'number') ? end : begin;
+                        if (j < len && this.tests[j].test(t)) {
+                            c = t;
 
-                return this.$phoneField.each(function () {
-                    if (this.setSelectionRange) {
-                        this.setSelectionRange(begin, end);
-
-                    } else if (this.createTextRange) {
-                        var range = this.createTextRange();
-                        range.collapse(true);
-                        range.moveEnd('character', end);
-                        range.moveStart('character', begin);
-                        range.select();
-                    }
-                });
-
-            } else {
-                if (this.$phoneField[0].setSelectionRange) {
-                    begin = this.$phoneField[0].selectionStart;
-                    end = this.$phoneField[0].selectionEnd;
-
-                } else if (document.selection && document.selection.createRange) {
-                    var range = document.selection.createRange();
-
-                    begin = 0 - range.duplicate().moveStart('character', -100000);
-                    end = begin + range.text.length;
-                }
-
-                return {
-                    begin: begin,
-                    end: end
-                }
-            }
-        },
-
-        unmask: function ()
-        {
-            this.$phoneField
-                .unbind('.ipub.forms.phone')
-                .removeData('ipub.forms.phone');
-        },
-
-        focusEvent: function ()
-        {
-            this.focusText = this.$phoneField.val();
-            var len = this.mask.length;
-            var pos = this.checkVal();
-
-            this.writeBuffer()
-
-            var that = this
-
-            var moveCaret = function () {
-                if (pos == len) {
-                    that.caret(0, pos);
-
-                } else {
-                    that.caret(pos)
-                }
-            }
-
-            moveCaret()
-            setTimeout(moveCaret, 50)
-        },
-
-        blurEvent: function ()
-        {
-            this.checkVal();
-
-            if (this.$phoneField.val() !== this.focusText) {
-                this.$phoneField.trigger('change');
-                this.$phoneField.trigger('input');
-            }
-        },
-
-        keydownEvent: function (e)
-        {
-            var k = e.which;
-
-            // backspace, delete, and escape get special treatment
-            if (k == 8 || k == 46 || (this.isIphone && k == 127)) {
-                var pos = this.caret(),
-                    begin = pos.begin,
-                    end = pos.end;
-
-                if (end - begin === 0) {
-                    begin = k != 46 ? this.seekPrev(begin) : (end = this.seekNext(begin - 1));
-                    end = k == 46 ? this.seekNext(end) : end;
-                }
-
-                this.clearBuffer(begin, end);
-                this.shiftL(begin, end - 1);
-
-                return false;
-
-            // escape
-            } else if (k == 27) {
-                this.$phoneField.val(this.focusText);
-                this.caret(0, this.checkVal());
-
-                return false;
-            }
-        },
-
-        keypressEvent: function (e)
-        {
-            var len = this.mask.length;
-
-            var k = e.which,
-                pos = this.caret();
-
-            // Ignore
-            if (e.ctrlKey || e.altKey || e.metaKey || k < 32) {
-                return true;
-
-            } else if (k) {
-                if (pos.end - pos.begin !== 0) {
-                    this.clearBuffer(pos.begin, pos.end);
-                    this.shiftL(pos.begin, pos.end - 1);
-                }
-
-                var p = this.seekNext(pos.begin - 1);
-
-                if (p < len) {
-                    var c = String.fromCharCode(k);
-
-                    if (this.tests[p].test(c)) {
-                        this.shiftR(p);
-                        this.buffer[p] = c;
-                        this.writeBuffer();
-                        var next = this.seekNext(p);
-                        this.caret(next);
-                    }
-                }
-
-                return false;
-            }
-        },
-
-        pasteEvent: function ()
-        {
-            var that = this
-
-            setTimeout(function () {
-                that.caret(that.checkVal(true))
-            }, 0);
-        },
-
-        clearBuffer: function (start, end)
-        {
-            var len = this.mask.length;
-
-            for (var i = start; i < end && i < len; i++) {
-                if (this.tests[i]) {
-                    this.buffer[i] = this.options.placeholder
-                }
-            }
-        },
-
-        writeBuffer: function ()
-        {
-            return this.$phoneField.val(this.buffer.join('')).val()
-        },
-
-        seekNext: function (pos)
-        {
-            var len = this.mask.length;
-
-            while (++pos <= len && !this.tests[pos]);
-
-            return pos;
-        },
-
-        seekPrev: function (pos)
-        {
-            while (--pos >= 0 && !this.tests[pos]);
-
-            return pos;
-        },
-
-        shiftL: function (begin, end)
-        {
-            var len = this.mask.length;
-
-            if (begin < 0) return;
-
-            for (var i = begin, j = this.seekNext(end); i < len; i++) {
-                if (this.tests[i]) {
-                    if (j < len && this.tests[i].test(this.buffer[j])) {
-                        this.buffer[i] = this.buffer[j];
-                        this.buffer[j] = this.options.placeholder;
-
-                    } else {
-                        break;
-                    }
-
-                    j = this.seekNext(j);
-                }
-            }
-
-            this.writeBuffer();
-            this.caret(Math.max(this.firstNonMaskPos, begin));
-        },
-
-        shiftR: function (pos)
-        {
-            var len = this.mask.length;
-
-            for (var i = pos, c = this.options.placeholder; i < len; i++) {
-                if (this.tests[i]) {
-                    var j = this.seekNext(i);
-                    var t = this.buffer[i];
-
-                    this.buffer[i] = c;
-
-                    if (j < len && this.tests[j].test(t)) {
-                        c = t;
-
-                    } else {
-                        break
+                        } else {
+                            break
+                        }
                     }
                 }
             }
-        }
-    };
+        };
 
     /**
      * Initialize form phone plugin
@@ -478,13 +460,13 @@
      */
 
     $.fn.ipubFormsPhone.defaults = {
-        mask        : '',
-        placeholder : '_',
-        definitions : {
-            '9' : '[0-9]',
-            'a' : '[A-Za-z]',
-            'w' : '[A-Za-z0-9]',
-            '*' : '.'
+        mask: '',
+        placeholder: '_',
+        definitions: {
+            '9': '[0-9]',
+            'a': '[A-Za-z]',
+            'w': '[A-Za-z0-9]',
+            '*': '.'
         }
     };
 
@@ -496,7 +478,7 @@
     IPub.Forms.Phone.load();
 
     // Autoload for ajax calls
-    $(document).ajaxSuccess(function() {
+    $(document).ajaxSuccess(function () {
         // Autoload plugin
         IPub.Forms.Phone.load();
     });

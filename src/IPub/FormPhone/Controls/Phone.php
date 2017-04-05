@@ -260,8 +260,8 @@ class Phone extends Forms\Controls\TextInput
 
 		} else {
 			foreach ($this->getAllowedCountries() as $country) {
-				if ($this->phoneUtils->isValid($value, $country)) {
-					$phone = IPub\Phone\Entities\Phone::fromNumber($value, $country);
+				if ($this->phoneUtils->isValid((string) $value, $country)) {
+					$phone = IPub\Phone\Entities\Phone::fromNumber((string) $value, $country);
 
 					$this->country = $phone->getCountry();
 					$this->number = str_replace(' ', '', $phone->getNationalNumber());
@@ -438,7 +438,18 @@ class Phone extends Forms\Controls\TextInput
 	}
 
 	/**
-	 * @return NULL
+	 * {@inheritdoc}
+	 */
+	public function getLabel($caption = NULL)
+	{
+		$label = parent::getLabel($caption);
+		$label->for = $this->getHtmlId() . '-' . self::FIELD_NUMBER;
+
+		return $label;
+	}
+
+	/**
+	 * {@inheritdoc}
 	 */
 	public function getLabelPart()
 	{
