@@ -1,8 +1,8 @@
 # Form Phone control
 
-[![Build Status](https://img.shields.io/travis/iPublikuj/form-phone.svg?style=flat-square)](https://travis-ci.org/iPublikuj/form-phone)
-[![Scrutinizer Code Coverage](https://img.shields.io/scrutinizer/coverage/g/iPublikuj/form-phone.svg?style=flat-square)](https://scrutinizer-ci.com/g/iPublikuj/form-phone/?branch=master)
-[![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/iPublikuj/form-phone.svg?style=flat-square)](https://scrutinizer-ci.com/g/iPublikuj/form-phone/?branch=master)
+[![Build Status](https://img.shields.io/travis/ipublikuj-ui/form-phone.svg?style=flat-square)](https://travis-ci.org/ipublikuj-ui/form-phone)
+[![Scrutinizer Code Coverage](https://img.shields.io/scrutinizer/coverage/g/ipublikuj-ui/form-phone.svg?style=flat-square)](https://scrutinizer-ci.com/g/ipublikuj-ui/form-phone/?branch=master)
+[![Scrutinizer Code Quality](https://img.shields.io/scrutinizer/g/ipublikuj-ui/form-phone.svg?style=flat-square)](https://scrutinizer-ci.com/g/ipublikuj-ui/form-phone/?branch=master)
 [![Latest Stable Version](https://img.shields.io/packagist/v/ipub/form-phone.svg?style=flat-square)](https://packagist.org/packages/ipub/form-phone)
 [![Composer Downloads](https://img.shields.io/packagist/dt/ipub/form-phone.svg?style=flat-square)](https://packagist.org/packages/ipub/form-phone)
 [![License](https://img.shields.io/packagist/l/ipub/form-phone.svg?style=flat-square)](https://packagist.org/packages/ipub/form-phone)
