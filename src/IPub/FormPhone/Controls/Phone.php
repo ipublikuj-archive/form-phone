@@ -420,6 +420,7 @@ class Phone extends Forms\Controls\TextInput
 				'value' => $this->number,
 				'type'  => 'text',
 				'class' => $prototype->getAttribute('class'),
+				'placeholder' => $prototype->getAttribute('placeholder')
 			]);
 
 			$control->data('nette-empty-value', Utils\Strings::trim($this->translate($this->emptyValue)));
