@@ -344,7 +344,7 @@ class Phone extends Forms\Controls\TextInput
 	 *
 	 * @throws Exceptions\InvalidArgumentException
 	 */
-	public function getControlPart()
+	public function getControlPart(): ?Utils\Html
 	{
 		$args = func_get_args();
 		$key = reset($args);
