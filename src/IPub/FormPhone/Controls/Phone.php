@@ -415,12 +415,13 @@ class Phone extends Forms\Controls\TextInput
 			$control = Utils\Html::el('input');
 
 			$control->addAttributes([
-				'name'  => $name . '[' . self::FIELD_NUMBER . ']',
-				'id'    => $this->getHtmlId() . '-' . self::FIELD_NUMBER,
-				'value' => $this->number,
-				'type'  => 'text',
-				'class' => $prototype->getAttribute('class'),
-				'placeholder' => $prototype->getAttribute('placeholder')
+				'name'        => $name . '[' . self::FIELD_NUMBER . ']',
+				'id'          => $this->getHtmlId() . '-' . self::FIELD_NUMBER,
+				'value'       => $this->number,
+				'type'        => 'text',
+				'class'       => $prototype->getAttribute('class'),
+				'placeholder' => $prototype->getAttribute('placeholder'),
+				'title'       => $prototype->getAttribute('title')
 			]);
 
 			$control->data('nette-empty-value', Utils\Strings::trim($this->translate($this->emptyValue)));
