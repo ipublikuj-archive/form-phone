@@ -37,7 +37,7 @@ use Tracy\Debugger;
  *
  * @author         Adam Kadlec <adam.kadlec@fastybird.com>
  */
-class PhoneValidator extends Phone\Forms\PhoneValidator
+class PhoneValidator extends \IPub\PhoneUI\Forms\PhoneValidator
 {
 	/**
 	 * Define validator calling constant
