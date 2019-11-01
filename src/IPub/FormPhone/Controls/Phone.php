@@ -319,7 +319,7 @@ class Phone extends Forms\Controls\TextInput
 	 *
 	 * @return void
 	 */
-	public function loadHttpData()
+	public function loadHttpData(): void
 	{
 		$country = $this->getHttpData(Forms\Form::DATA_LINE, '[' . self::FIELD_COUNTRY . ']');
 		$this->country = ($country === '' || $country === NULL) ? NULL : (string) $country;
@@ -331,7 +331,7 @@ class Phone extends Forms\Controls\TextInput
 	/**
 	 * @return Utils\Html
 	 */
-	public function getControl()
+	public function getControl(): Utils\Html
 	{
 		$el = Utils\Html::el();
 		$el->addHtml($this->getControlPart(self::FIELD_COUNTRY) . $this->getControlPart(self::FIELD_NUMBER));
@@ -340,11 +340,11 @@ class Phone extends Forms\Controls\TextInput
 	}
 
 	/**
-	 * @return Utils\Html
+	 * @return Utils\Html|null
 	 *
 	 * @throws Exceptions\InvalidArgumentException
 	 */
-	public function getControlPart()
+	public function getControlPart(): ?Utils\Html
 	{
 		$args = func_get_args();
 		$key = reset($args);
@@ -442,7 +442,7 @@ class Phone extends Forms\Controls\TextInput
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getLabel($caption = NULL)
+	public function getLabel($caption = NULL): ?Utils\Html
 	{
 		$label = parent::getLabel($caption);
 		$label->for = $this->getHtmlId() . '-' . self::FIELD_NUMBER;
@@ -453,7 +453,7 @@ class Phone extends Forms\Controls\TextInput
 	/**
 	 * {@inheritdoc}
 	 */
-	public function getLabelPart()
+	public function getLabelPart(): ?Utils\Html
 	{
 		return NULL;
 	}
