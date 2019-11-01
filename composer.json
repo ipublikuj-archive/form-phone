@@ -1,5 +1,5 @@
 {
-	"name"			: "xsuchy09/form-phone",
+	"name"			: "ipub/form-phone",
 	"type"			: "library",
 	"description"	: "Forms control for adding phone filed for Nette Framework",
 	"keywords"		: ["nette", "form", "phone", "ipub", "ipublikuj", "framework", "tools"],
@@ -22,8 +22,8 @@
 	"require": {
 		"php"	: ">=7.1.0",
 
-		"xsuchy09/phone"	: "^3.0",
-		"xsuchy09/phone-ui" : "^2.0",
+		"ipub/phone"	: "^3.0",
+		"ipub/phone-ui" : "^2.0",
 
 		"nette/application"	: "^3.0",
 		"nette/di"			: "^3.0",
